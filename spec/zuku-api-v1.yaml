@@ -1,0 +1,2059 @@
+openapi: 3.1.0
+info:
+  title: Shizuku Platform API
+  description: |
+    Shizuku Platform (zuzunza.com)의 공식 REST API 명세서입니다.
+    Hype, Swipe, Jump 콘텐츠를 통합 관리하는 플랫폼 API를 제공합니다.
+  version: 1.0.0
+  contact:
+    name: Shizuku API Support
+    email: api-support@zuzunza.com
+    url: https://developers.zuzunza.com
+  license:
+    name: Proprietary
+    url: https://zuzunza.com/license
+
+servers:
+  - url: https://api.zuzunza.com/v1
+    description: 프로덕션 서버
+  - url: https://sandbox.zuzunza.com/v1
+    description: 샌드박스 (테스트) 서버
+
+tags:
+  - name: Auth
+    description: 인증 및 사용자 관리
+  - name: Feeds
+    description: 피드 조회 (Hype, Swipe, Jump 통합)
+  - name: Contents
+    description: 콘텐츠 CRUD 및 상호작용
+  - name: Hype
+    description: Hype 콘텐츠 인터랙션
+  - name: Swipe
+    description: Swipe 콘텐츠 시청
+  - name: Jump
+    description: Jump 게임 플랫폼
+  - name: Creators
+    description: 크리에이터 프로필 및 팔로우
+  - name: Moderation
+    description: 콘텐츠 신고 및 검열
+  - name: Admin
+    description: 관리자 전용 엔드포인트
+
+security:
+  - BearerAuth: []
+  - ApiKeyAuth: []
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: OAuth 2.0으로 발급받은 JWT Access Token
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Developer Console에서 발급받은 API 키
+
+  schemas:
+    # ── 공통 응답 ──────────────────────────────────────
+    PaginationMeta:
+      type: object
+      required: [total, limit, offset, has_more]
+      properties:
+        total:
+          type: integer
+          description: 전체 항목 수
+          example: 1234
+        limit:
+          type: integer
+          description: 요청된 페이지 크기
+          example: 20
+        offset:
+          type: integer
+          description: 현재 오프셋
+          example: 0
+        has_more:
+          type: boolean
+          description: 다음 페이지 존재 여부
+          example: true
+
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+              description: 에러 코드
+              example: VALIDATION_ERROR
+            message:
+              type: string
+              description: 사용자 친화적 에러 메시지
+              example: 요청 필드가 유효하지 않습니다
+            details:
+              type: array
+              items:
+                type: object
+                properties:
+                  field:
+                    type: string
+                    example: title
+                  message:
+                    type: string
+                    example: 제목은 1자 이상이어야 합니다
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: 요청이 성공적으로 처리되었습니다
+
+    # ── Auth ───────────────────────────────────────────
+    User:
+      type: object
+      required: [id, email, username, created_at, profile_completion_status]
+      properties:
+        id:
+          type: string
+          description: 사용자 고유 ID
+          example: usr_01H8X9Y2Z3A4B5C6D7E8F9G0
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        username:
+          type: string
+          example: shizuku_user
+        display_name:
+          type: string
+          example: 시즈쿠 유저
+        avatar_url:
+          type: string
+          format: uri
+          nullable: true
+          example: https://cdn.zuzunza.com/avatars/usr_01H8X9Y2Z3A4B5C6D7E8F9G0.jpg
+        role:
+          type: string
+          enum: [user, creator, admin]
+          example: user
+        created_at:
+          type: string
+          format: date-time
+          example: "2026-01-15T09:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2026-08-19T09:00:00Z"
+        profile_completion_status:
+          type: string
+          enum: [incomplete, complete]
+          description: 추가 프로필 입력 상태. 최소 가입 직후에는 incomplete입니다.
+
+    RegisterRequest:
+      type: object
+      required: [email, password, username]
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        password:
+          type: string
+          minLength: 12
+          example: SecureP@ssw0rd!
+        username:
+          type: string
+          minLength: 3
+          maxLength: 30
+          pattern: "^[a-zA-Z0-9_]+$"
+          example: shizuku_user
+        display_name:
+          type: string
+          maxLength: 50
+          example: 시즈쿠 유저
+          description: 선택적 표시 이름. 생략 시 서버가 username/handle을 사용합니다.
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        password:
+          type: string
+          example: SecureP@ssw0rd!
+
+    TokenResponse:
+      type: object
+      required: [access_token, refresh_token, token_type, expires_in]
+      properties:
+        access_token:
+          type: string
+          description: JWT Access Token
+          example: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...
+        refresh_token:
+          type: string
+          description: Refresh Token
+          example: rt_01H8X9Y2Z3A4B5C6D7E8F9G0
+        token_type:
+          type: string
+          example: Bearer
+        expires_in:
+          type: integer
+          description: Access Token 유효 기간 (초)
+          example: 900
+        scope:
+          type: string
+          example: "content:read user:read"
+
+    RefreshRequest:
+      type: object
+      required: [refresh_token]
+      properties:
+        refresh_token:
+          type: string
+          example: rt_01H8X9Y2Z3A4B5C6D7E8F9G0
+
+    OAuthProvider:
+      type: string
+      enum: [github, google, apple]
+
+    # ── Contents ───────────────────────────────────────
+    ContentCategory:
+      type: string
+      enum: [hype, swipe, jump]
+
+    ContentStatus:
+      type: string
+      enum: [draft, published, archived, moderated, deleted]
+
+    Content:
+      type: object
+      required: [id, title, category, creator_id, status, created_at]
+      properties:
+        id:
+          type: string
+          example: cnt_01H8X9Y2Z3A4B5C6D7E8F9G0
+        title:
+          type: string
+          example: 새로운 콘텐츠입니다
+        description:
+          type: string
+          nullable: true
+          example: 이 콘텐츠는 테스트용입니다
+        category:
+          $ref: "#/components/schemas/ContentCategory"
+        status:
+          $ref: "#/components/schemas/ContentStatus"
+        creator_id:
+          type: string
+          example: usr_01H8X9Y2Z3A4B5C6D7E8F9G0
+        creator:
+          $ref: "#/components/schemas/CreatorSummary"
+        media_url:
+          type: string
+          format: uri
+          nullable: true
+          example: https://cdn.zuzunza.com/media/cnt_01H8X9Y2Z3A4B5C6D7E8F9G0.mp4
+        thumbnail_url:
+          type: string
+          format: uri
+          nullable: true
+          example: https://cdn.zuzunza.com/thumbs/cnt_01H8X9Y2Z3A4B5C6D7E8F9G0.jpg
+        tags:
+          type: array
+          items:
+            type: string
+          example: [dance, viral, trending]
+        view_count:
+          type: integer
+          example: 15234
+        like_count:
+          type: integer
+          example: 2341
+        comment_count:
+          type: integer
+          example: 89
+        bookmark_count:
+          type: integer
+          example: 456
+        is_liked:
+          type: boolean
+          example: false
+        is_bookmarked:
+          type: boolean
+          example: false
+        duration_seconds:
+          type: integer
+          nullable: true
+          description: 미디어 길이 (초)
+          example: 30
+        metadata:
+          type: object
+          nullable: true
+          additionalProperties: true
+        created_at:
+          type: string
+          format: date-time
+          example: "2026-08-19T09:21:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2026-08-19T09:21:00Z"
+
+    CreateContentRequest:
+      type: object
+      required: [title, category]
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+          example: 새로운 콘텐츠입니다
+        description:
+          type: string
+          maxLength: 2000
+          example: 이 콘텐츠는 테스트용입니다
+        category:
+          $ref: "#/components/schemas/ContentCategory"
+        media_url:
+          type: string
+          format: uri
+          example: https://cdn.zuzunza.com/uploads/video.mp4
+        tags:
+          type: array
+          items:
+            type: string
+            maxLength: 30
+          maxItems: 20
+          example: [dance, viral]
+        duration_seconds:
+          type: integer
+          minimum: 1
+          maximum: 3600
+          example: 30
+        metadata:
+          type: object
+          additionalProperties: true
+
+    UpdateContentRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+          example: 수정된 콘텐츠입니다
+        description:
+          type: string
+          maxLength: 2000
+        tags:
+          type: array
+          items:
+            type: string
+          maxItems: 20
+        status:
+          type: string
+          enum: [draft, published, archived]
+
+    Comment:
+      type: object
+      required: [id, content_id, user_id, text, created_at]
+      properties:
+        id:
+          type: string
+          example: cmt_01H8X9Y2Z3A4B5C6D7E8F9G0
+        content_id:
+          type: string
+          example: cnt_01H8X9Y2Z3A4B5C6D7E8F9G0
+        user_id:
+          type: string
+          example: usr_01H8X9Y2Z3A4B5C6D7E8F9G0
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+            username:
+              type: string
+            avatar_url:
+              type: string
+              nullable: true
+        text:
+          type: string
+          example: 정말 좋은 콘텐츠네요!
+        created_at:
+          type: string
+          format: date-time
+          example: "2026-08-19T09:25:00Z"
+
+    CreateCommentRequest:
+      type: object
+      required: [text]
+      properties:
+        text:
+          type: string
+          minLength: 1
+          maxLength: 1000
+          example: 정말 좋은 콘텐츠네요!
+
+    # ── Feeds ──────────────────────────────────────────
+    FeedFilter:
+      type: object
+      properties:
+        category:
+          $ref: "#/components/schemas/ContentCategory"
+        sort:
+          type: string
+          enum: [latest, popular, trending]
+          default: latest
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        offset:
+          type: integer
+          minimum: 0
+          default: 0
+
+    FeedResponse:
+      type: object
+      required: [data, pagination]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Content"
+        pagination:
+          $ref: "#/components/schemas/PaginationMeta"
+
+    # ── Hype ───────────────────────────────────────────
+    HypeContent:
+      allOf:
+        - $ref: "#/components/schemas/Content"
+        - type: object
+          properties:
+            hype_score:
+              type: number
+              format: float
+              description: 인기도 점수 (0-100)
+              example: 87.5
+            interaction_count:
+              type: integer
+              example: 4521
+
+    HypeInteractRequest:
+      type: object
+      required: [action]
+      properties:
+        action:
+          type: string
+          enum: [like, super_like, share, comment]
+          example: like
+        comment_text:
+          type: string
+          maxLength: 500
+          nullable: true
+          example: 대박이네요!
+
+    # ── Swipe ──────────────────────────────────────────
+    SwipeContent:
+      allOf:
+        - $ref: "#/components/schemas/Content"
+        - type: object
+          properties:
+            swipe_data:
+              type: object
+              properties:
+                full_duration:
+                  type: integer
+                  description: 전체 영상 길이 (초)
+                  example: 15
+                preview_duration:
+                  type: integer
+                  description: 미리보기 길이 (초)
+                  example: 5
+                cta_text:
+                  type: string
+                  nullable: true
+                  example: 자세히 보기
+
+    SwipeWatchRequest:
+      type: object
+      properties:
+        watch_duration:
+          type: integer
+          description: 시청 시간 (초)
+          example: 12
+        completed:
+          type: boolean
+          description: 전체 시청 완료 여부
+          example: true
+
+    # ── Jump ───────────────────────────────────────────
+    Game:
+      type: object
+      required: [id, title, category, creator_id, created_at]
+      properties:
+        id:
+          type: string
+          example: game_01H8X9Y2Z3A4B5C6D7E8F9G0
+        title:
+          type: string
+          example: 챌린지 게임
+        description:
+          type: string
+          nullable: true
+          example: 재미있는 챌린지 게임입니다
+        category:
+          type: string
+          enum: [puzzle, action, casual, quiz]
+          example: casual
+        thumbnail_url:
+          type: string
+          format: uri
+          nullable: true
+        game_url:
+          type: string
+          format: uri
+          description: 게임 실행 URL
+          example: https://games.zuzunza.com/game_01H8X9Y2Z3A4B5C6D7E8F9G0
+        creator_id:
+          type: string
+          example: usr_01H8X9Y2Z3A4B5C6D7E8F9G0
+        play_count:
+          type: integer
+          example: 23456
+        avg_rating:
+          type: number
+          format: float
+          example: 4.5
+        review_count:
+          type: integer
+          example: 123
+        is_featured:
+          type: boolean
+          example: false
+        created_at:
+          type: string
+          format: date-time
+          example: "2026-08-19T09:00:00Z"
+
+    PlayGameRequest:
+      type: object
+      properties:
+        score:
+          type: integer
+          minimum: 0
+          example: 1500
+        duration_seconds:
+          type: integer
+          minimum: 1
+          example: 120
+        metadata:
+          type: object
+          nullable: true
+          additionalProperties: true
+
+    GameReview:
+      type: object
+      required: [id, user_id, rating, created_at]
+      properties:
+        id:
+          type: string
+          example: rev_01H8X9Y2Z3A4B5C6D7E8F9G0
+        user_id:
+          type: string
+        game_id:
+          type: string
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+          example: 5
+        text:
+          type: string
+          nullable: true
+          example: 정말 재미있어요!
+        created_at:
+          type: string
+          format: date-time
+
+    CreateReviewRequest:
+      type: object
+      required: [rating]
+      properties:
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+          example: 5
+        text:
+          type: string
+          maxLength: 1000
+          nullable: true
+          example: 정말 재미있어요!
+
+    LeaderboardEntry:
+      type: object
+      required: [rank, user_id, score]
+      properties:
+        rank:
+          type: integer
+          example: 1
+        user_id:
+          type: string
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+            username:
+              type: string
+            avatar_url:
+              type: string
+              nullable: true
+        score:
+          type: integer
+          example: 9800
+        played_at:
+          type: string
+          format: date-time
+
+    # ── Creators ───────────────────────────────────────
+    CreatorSummary:
+      type: object
+      required: [id, handle, display_name]
+      properties:
+        id:
+          type: string
+          example: usr_01H8X9Y2Z3A4B5C6D7E8F9G0
+        handle:
+          type: string
+          example: @creator_name
+        display_name:
+          type: string
+          example: 크리에이터 이름
+        avatar_url:
+          type: string
+          format: uri
+          nullable: true
+        is_verified:
+          type: boolean
+          example: true
+
+    Creator:
+      allOf:
+        - $ref: "#/components/schemas/CreatorSummary"
+        - type: object
+          properties:
+            bio:
+              type: string
+              nullable: true
+              example: 안녕하세요, 크리에이터입니다
+            follower_count:
+              type: integer
+              example: 12345
+            content_count:
+              type: integer
+              example: 89
+            total_views:
+              type: integer
+              example: 1234567
+            is_following:
+              type: boolean
+              example: false
+            created_at:
+              type: string
+              format: date-time
+              example: "2026-01-01T00:00:00Z"
+
+    CreatorAnalytics:
+      type: object
+      properties:
+        period:
+          type: string
+          enum: [7d, 30d, 90d]
+          example: 30d
+        total_views:
+          type: integer
+          example: 123456
+        total_likes:
+          type: integer
+          example: 23456
+        total_comments:
+          type: integer
+          example: 1234
+        follower_growth:
+          type: integer
+          example: 567
+        top_contents:
+          type: array
+          items:
+            type: object
+            properties:
+              content_id:
+                type: string
+              title:
+                type: string
+              views:
+                type: integer
+              likes:
+                type: integer
+
+    # ── Moderation ─────────────────────────────────────
+    Report:
+      type: object
+      required: [id, content_id, reporter_id, reason, created_at]
+      properties:
+        id:
+          type: string
+          example: rpt_01H8X9Y2Z3A4B5C6D7E8F9G0
+        content_id:
+          type: string
+          example: cnt_01H8X9Y2Z3A4B5C6D7E8F9G0
+        reporter_id:
+          type: string
+          example: usr_01H8X9Y2Z3A4B5C6D7E8F9G0
+        reason:
+          type: string
+          enum: [spam, inappropriate, copyright, harassment, other]
+          example: inappropriate
+        description:
+          type: string
+          nullable: true
+          example: 부적절한 콘텐츠입니다
+        status:
+          type: string
+          enum: [pending, reviewed, resolved, dismissed]
+          example: pending
+        created_at:
+          type: string
+          format: date-time
+          example: "2026-08-19T09:30:00Z"
+
+    CreateReportRequest:
+      type: object
+      required: [content_id, reason]
+      properties:
+        content_id:
+          type: string
+          example: cnt_01H8X9Y2Z3A4B5C6D7E8F9G0
+        reason:
+          type: string
+          enum: [spam, inappropriate, copyright, harassment, other]
+          example: inappropriate
+        description:
+          type: string
+          maxLength: 2000
+          nullable: true
+          example: 부적절한 콘텐츠입니다
+
+    # ── Admin ──────────────────────────────────────────
+    AdminDashboard:
+      type: object
+      properties:
+        total_users:
+          type: integer
+          example: 123456
+        active_users_today:
+          type: integer
+          example: 8901
+        total_contents:
+          type: integer
+          example: 456789
+        contents_today:
+          type: integer
+          example: 1234
+        pending_reports:
+          type: integer
+          example: 56
+        api_calls_today:
+          type: integer
+          example: 1234567
+        system_status:
+          type: string
+          enum: [healthy, degraded, down]
+          example: healthy
+
+    UserAdmin:
+      allOf:
+        - $ref: "#/components/schemas/User"
+        - type: object
+          properties:
+            status:
+              type: string
+              enum: [active, suspended, banned]
+              example: active
+            api_calls_count:
+              type: integer
+              example: 12345
+            last_login_at:
+              type: string
+              format: date-time
+              nullable: true
+
+    UpdateUserAdminRequest:
+      type: object
+      properties:
+        role:
+          type: string
+          enum: [user, creator, admin]
+        status:
+          type: string
+          enum: [active, suspended, banned]
+        display_name:
+          type: string
+
+    ModerateContentRequest:
+      type: object
+      required: [action]
+      properties:
+        action:
+          type: string
+          enum: [approve, reject, remove, warn]
+          example: approve
+        reason:
+          type: string
+          maxLength: 2000
+          nullable: true
+          example: 콘텐츠 검열 기준 충족
+
+  parameters:
+    LimitParam:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+      description: 페이지당 항목 수
+    OffsetParam:
+      name: offset
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+      description: 오프셋
+    SortParam:
+      name: sort
+      in: query
+      schema:
+        type: string
+        enum: [latest, popular, trending]
+        default: latest
+      description: 정렬 기준
+
+  responses:
+    BadRequest:
+      description: 잘못된 요청
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            error:
+              code: VALIDATION_ERROR
+              message: 요청 필드가 유효하지 않습니다
+              details:
+                - field: title
+                  message: 제목은 1자 이상이어야 합니다
+    Unauthorized:
+      description: 인증 필요
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            error:
+              code: UNAUTHORIZED
+              message: 인증이 필요합니다
+    Forbidden:
+      description: 접근 권한 없음
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            error:
+              code: FORBIDDEN
+              message: 접근 권한이 없습니다
+    NotFound:
+      description: 리소스를 찾을 수 없음
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            error:
+              code: NOT_FOUND
+              message: 요청한 리소스를 찾을 수 없습니다
+    TooManyRequests:
+      description: 속도 제한 초과
+      headers:
+        Retry-After:
+          schema:
+            type: integer
+          description: 재시도 대기 시간 (초)
+        X-RateLimit-Limit:
+          schema:
+            type: integer
+          description: 분당 허용 요청 수
+        X-RateLimit-Remaining:
+          schema:
+            type: integer
+          description: 남은 요청 수
+        X-RateLimit-Reset:
+          schema:
+            type: integer
+          description: 제한 리셋 시간 (유닉스 타임스탬프)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            error:
+              code: RATE_LIMITED
+              message: 요청이 너무 많습니다. 잠시 후 다시 시도해 주세요
+    InternalError:
+      description: 서버 내부 에러
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            error:
+              code: INTERNAL_ERROR
+              message: 서버 내부 오류가 발생했습니다
+
+paths:
+  # ═══════════════════════════════════════════════════════
+  # Auth
+  # ═══════════════════════════════════════════════════════
+  /auth/register:
+    post:
+      operationId: registerUser
+      tags: [Auth]
+      summary: 회원가입
+      description: 새 사용자를 등록합니다.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        "201":
+          description: 회원가입 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+                  tokens:
+                    $ref: "#/components/schemas/TokenResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          description: 이미 존재하는 이메일 또는 사용자명
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/login:
+    post:
+      operationId: loginUser
+      tags: [Auth]
+      summary: 로그인
+      description: 이메일과 비밀번호로 로그인합니다.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: 로그인 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+                  tokens:
+                    $ref: "#/components/schemas/TokenResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+
+  /auth/logout:
+    post:
+      operationId: logoutUser
+      tags: [Auth]
+      summary: 로그아웃
+      description: 현재 세션을 무효화합니다.
+      responses:
+        "200":
+          $ref: "#/components/schemas/SuccessResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /auth/refresh:
+    post:
+      operationId: refreshToken
+      tags: [Auth]
+      summary: 토큰 갱신
+      description: Refresh Token으로 Access Token을 갱신합니다.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshRequest"
+      responses:
+        "200":
+          description: 토큰 갱신 성공
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+        "401":
+          description: 유효하지 않은 Refresh Token
+
+  /auth/me:
+    get:
+      operationId: getCurrentUser
+      tags: [Auth]
+      summary: 내 정보 조회
+      description: 현재 인증된 사용자의 정보를 반환합니다.
+      responses:
+        "200":
+          description: 사용자 정보
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /auth/oauth/{provider}:
+    get:
+      operationId: oauthRedirect
+      tags: [Auth]
+      summary: OAuth 로그인 리다이렉트
+      description: 지정된 OAuth 프로바이더로 리다이렉트합니다.
+      security: []
+      parameters:
+        - name: provider
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/OAuthProvider"
+      responses:
+        "302":
+          description: OAuth 프로바이더로 리다이렉트
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  # ═══════════════════════════════════════════════════════
+  # Feeds
+  # ═══════════════════════════════════════════════════════
+  /feeds:
+    get:
+      operationId: getFeeds
+      tags: [Feeds]
+      summary: 전체 피드 조회
+      description: 카테고리별로 필터링된 콘텐츠 피드를 반환합니다.
+      parameters:
+        - name: category
+          in: query
+          schema:
+            $ref: "#/components/schemas/ContentCategory"
+          description: 콘텐츠 카테고리 필터
+        - $ref: "#/components/parameters/SortParam"
+        - $ref: "#/components/parameters/LimitParam"
+        - $ref: "#/components/parameters/OffsetParam"
+      responses:
+        "200":
+          description: 피드 조회 성공
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FeedResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /feeds/hype:
+    get:
+      operationId: getHypeFeed
+      tags: [Feeds]
+      summary: Hype 피드 조회
+      description: Hype 카테고리의 인기 콘텐츠를 반환합니다.
+      parameters:
+        - $ref: "#/components/parameters/SortParam"
+        - $ref: "#/components/parameters/LimitParam"
+        - $ref: "#/components/parameters/OffsetParam"
+      responses:
+        "200":
+          description: Hype 피드 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/HypeContent"
+                  pagination:
+                    $ref: "#/components/schemas/PaginationMeta"
+
+  /feeds/swipe:
+    get:
+      operationId: getSwipeFeed
+      tags: [Feeds]
+      summary: Swipe 피드 조회
+      description: Swipe 카테고리의 숏폼 콘텐츠를 반환합니다.
+      parameters:
+        - name: personalized
+          in: query
+          schema:
+            type: boolean
+            default: false
+          description: 개인화된 피드 여부
+        - $ref: "#/components/parameters/LimitParam"
+        - $ref: "#/components/parameters/OffsetParam"
+      responses:
+        "200":
+          description: Swipe 피드 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/SwipeContent"
+                  pagination:
+                    $ref: "#/components/schemas/PaginationMeta"
+
+  /feeds/jump:
+    get:
+      operationId: getJumpFeed
+      tags: [Feeds]
+      summary: Jump 피드 조회
+      description: Jump 카테고리의 게임 목록을 반환합니다.
+      parameters:
+        - name: game_category
+          in: query
+          schema:
+            type: string
+            enum: [puzzle, action, casual, quiz]
+          description: 게임 카테고리 필터
+        - $ref: "#/components/parameters/SortParam"
+        - $ref: "#/components/parameters/LimitParam"
+        - $ref: "#/components/parameters/OffsetParam"
+      responses:
+        "200":
+          description: Jump 피드 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Game"
+                  pagination:
+                    $ref: "#/components/schemas/PaginationMeta"
+
+  # ═══════════════════════════════════════════════════════
+  # Contents
+  # ═══════════════════════════════════════════════════════
+  /contents/{id}:
+    get:
+      operationId: getContent
+      tags: [Contents]
+      summary: 콘텐츠 상세 조회
+      description: 콘텐츠의 상세 정보를 반환합니다.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 콘텐츠 ID
+      responses:
+        "200":
+          description: 콘텐츠 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Content"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    put:
+      operationId: updateContent
+      tags: [Contents]
+      summary: 콘텐츠 수정
+      description: 콘텐츠 정보를 수정합니다. 본인의 콘텐츠만 수정 가능합니다.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateContentRequest"
+      responses:
+        "200":
+          description: 콘텐츠 수정 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Content"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    delete:
+      operationId: deleteContent
+      tags: [Contents]
+      summary: 콘텐츠 삭제
+      description: 콘텐츠를 삭제합니다. 본인의 콘텐츠만 삭제 가능합니다.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          $ref: "#/components/schemas/SuccessResponse"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /contents:
+    post:
+      operationId: createContent
+      tags: [Contents]
+      summary: 콘텐츠 생성
+      description: 새 콘텐츠를 생성합니다.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateContentRequest"
+      responses:
+        "201":
+          description: 콘텐츠 생성 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Content"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /contents/{id}/like:
+    post:
+      operationId: likeContent
+      tags: [Contents]
+      summary: 콘텐츠 좋아요
+      description: 콘텐츠에 좋아요를 표시합니다.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          $ref: "#/components/schemas/SuccessResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    delete:
+      operationId: unlikeContent
+      tags: [Contents]
+      summary: 콘텐츠 좋아요 취소
+      description: 콘텐츠의 좋아요를 취소합니다.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          $ref: "#/components/schemas/SuccessResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /contents/{id}/bookmark:
+    post:
+      operationId: bookmarkContent
+      tags: [Contents]
+      summary: 콘텐츠 북마크
+      description: 콘텐츠를 북마크에 추가합니다.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          $ref: "#/components/schemas/SuccessResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /contents/{id}/comments:
+    get:
+      operationId: getContentComments
+      tags: [Contents]
+      summary: 콘텐츠 댓글 목록
+      description: 콘텐츠의 댓글 목록을 반환합니다.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: "#/components/parameters/LimitParam"
+        - $ref: "#/components/parameters/OffsetParam"
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [latest, popular]
+            default: latest
+      responses:
+        "200":
+          description: 댓글 목록 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Comment"
+                  pagination:
+                    $ref: "#/components/schemas/PaginationMeta"
+
+    post:
+      operationId: createComment
+      tags: [Contents]
+      summary: 콘텐츠 댓글 작성
+      description: 콘텐츠에 댓글을 작성합니다.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCommentRequest"
+      responses:
+        "201":
+          description: 댓글 작성 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Comment"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  # ═══════════════════════════════════════════════════════
+  # Hype
+  # ═══════════════════════════════════════════════════════
+  /hype/{id}:
+    get:
+      operationId: getHypeContent
+      tags: [Hype]
+      summary: Hype 콘텐츠 상세 조회
+      description: Hype 콘텐츠의 상세 정보와 인기도 점수를 반환합니다.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Hype 콘텐츠 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/HypeContent"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /hype/{id}/interact:
+    post:
+      operationId: interactHypeContent
+      tags: [Hype]
+      summary: Hype 콘텐츠 인터랙션
+      description: Hype 콘텐츠에 인터랙션(좋아요, 슈퍼좋아요, 공유)을 수행합니다.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HypeInteractRequest"
+      responses:
+        "200":
+          $ref: "#/components/schemas/SuccessResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # ═══════════════════════════════════════════════════════
+  # Swipe
+  # ═══════════════════════════════════════════════════════
+  /swipe/feed:
+    get:
+      operationId: getSwipeFeedAlt
+      tags: [Swipe]
+      summary: Swipe 피드 조회 (대체 경로)
+      description: Swipe 숏폼 콘텐츠 피드를 반환합니다.
+      parameters:
+        - name: cursor
+          in: query
+          schema:
+            type: string
+          description: 무한 스크롤용 커서
+        - $ref: "#/components/parameters/LimitParam"
+      responses:
+        "200":
+          description: Swipe 피드 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/SwipeContent"
+                  next_cursor:
+                    type: string
+                    nullable: true
+                    example: eyJpZCI6ImNudF8wMUg4WDlZMlozQTRCNUM2RCIifQ==
+
+  /swipe/{id}/watch:
+    post:
+      operationId: recordSwipeWatch
+      tags: [Swipe]
+      summary: Swipe 시청 기록
+      description: Swipe 콘텐츠 시청 기록을 저장합니다.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SwipeWatchRequest"
+      responses:
+        "200":
+          $ref: "#/components/schemas/SuccessResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # ═══════════════════════════════════════════════════════
+  # Jump
+  # ═══════════════════════════════════════════════════════
+  /jump/games:
+    get:
+      operationId: getJumpGames
+      tags: [Jump]
+      summary: 게임 목록 조회
+      description: Jump 게임 목록을 반환합니다.
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+            enum: [puzzle, action, casual, quiz]
+          description: 게임 카테고리 필터
+        - name: featured
+          in: query
+          schema:
+            type: boolean
+          description: 추천 게임만 필터링
+        - $ref: "#/components/parameters/SortParam"
+        - $ref: "#/components/parameters/LimitParam"
+        - $ref: "#/components/parameters/OffsetParam"
+      responses:
+        "200":
+          description: 게임 목록 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Game"
+                  pagination:
+                    $ref: "#/components/schemas/PaginationMeta"
+
+  /jump/games/{id}:
+    get:
+      operationId: getJumpGame
+      tags: [Jump]
+      summary: 게임 상세 조회
+      description: 게임의 상세 정보를 반환합니다.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 게임 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Game"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /jump/games/{id}/play:
+    post:
+      operationId: playJumpGame
+      tags: [Jump]
+      summary: 게임 플레이 기록
+      description: 게임 플레이 결과를 기록합니다.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlayGameRequest"
+      responses:
+        "200":
+          description: 플레이 기록 저장 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      score:
+                        type: integer
+                      rank:
+                        type: integer
+                      new_high_score:
+                        type: boolean
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /jump/games/{id}/review:
+    post:
+      operationId: createGameReview
+      tags: [Jump]
+      summary: 게임 리뷰 작성
+      description: 게임에 대한 리뷰를 작성합니다.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateReviewRequest"
+      responses:
+        "201":
+          description: 리뷰 작성 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/GameReview"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /jump/games/{id}/leaderboard:
+    get:
+      operationId: getGameLeaderboard
+      tags: [Jump]
+      summary: 게임 리더보드
+      description: 게임의 리더보드를 반환합니다.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: "#/components/parameters/LimitParam"
+        - name: period
+          in: query
+          schema:
+            type: string
+            enum: [daily, weekly, all_time]
+            default: all_time
+          description: 기간 필터
+      responses:
+        "200":
+          description: 리더보드 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/LeaderboardEntry"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # ═══════════════════════════════════════════════════════
+  # Creators
+  # ═══════════════════════════════════════════════════════
+  /creators/{handle}:
+    get:
+      operationId: getCreator
+      tags: [Creators]
+      summary: 크리에이터 프로필 조회
+      description: 크리에이터의 프로필 정보를 반환합니다.
+      parameters:
+        - name: handle
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 크리에이터 핸들 (@ 제외)
+          example: creator_name
+      responses:
+        "200":
+          description: 크리에이터 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Creator"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /creators/{handle}/contents:
+    get:
+      operationId: getCreatorContents
+      tags: [Creators]
+      summary: 크리에이터 콘텐츠 목록
+      description: 크리에이터가 만든 콘텐츠 목록을 반환합니다.
+      parameters:
+        - name: handle
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: category
+          in: query
+          schema:
+            $ref: "#/components/schemas/ContentCategory"
+        - $ref: "#/components/parameters/SortParam"
+        - $ref: "#/components/parameters/LimitParam"
+        - $ref: "#/components/parameters/OffsetParam"
+      responses:
+        "200":
+          description: 크리에이터 콘텐츠 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Content"
+                  pagination:
+                    $ref: "#/components/schemas/PaginationMeta"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /creators/{id}/follow:
+    post:
+      operationId: followCreator
+      tags: [Creators]
+      summary: 크리에이터 팔로우
+      description: 크리에이터를 팔로우합니다.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          $ref: "#/components/schemas/SuccessResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    delete:
+      operationId: unfollowCreator
+      tags: [Creators]
+      summary: 크리에이터 언팔로우
+      description: 크리에이터를 언팔로우합니다.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          $ref: "#/components/schemas/SuccessResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /creators/{id}/analytics:
+    get:
+      operationId: getCreatorAnalytics
+      tags: [Creators]
+      summary: 크리에이터 분석 데이터
+      description: 크리에이터의 분석 데이터를 반환합니다. 본인의 데이터만 조회 가능합니다.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: period
+          in: query
+          schema:
+            type: string
+            enum: [7d, 30d, 90d]
+            default: 30d
+          description: 분석 기간
+      responses:
+        "200":
+          description: 분석 데이터 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/CreatorAnalytics"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  # ═══════════════════════════════════════════════════════
+  # Moderation
+  # ═══════════════════════════════════════════════════════
+  /reports:
+    post:
+      operationId: createReport
+      tags: [Moderation]
+      summary: 콘텐츠 신고
+      description: 부적절한 콘텐츠를 신고합니다.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateReportRequest"
+      responses:
+        "201":
+          description: 신고 접수 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Report"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /reports/{id}:
+    get:
+      operationId: getReport
+      tags: [Moderation]
+      summary: 신고 상세 조회
+      description: 신고의 상세 정보를 반환합니다. 관리자만 조회 가능합니다.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 신고 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Report"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # ═══════════════════════════════════════════════════════
+  # Admin
+  # ═══════════════════════════════════════════════════════
+  /admin/dashboard:
+    get:
+      operationId: getAdminDashboard
+      tags: [Admin]
+      summary: 관리자 대시보드
+      description: 관리자 대시보드 통계를 반환합니다. 관리자 권한이 필요합니다.
+      responses:
+        "200":
+          description: 대시보드 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/AdminDashboard"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /admin/users:
+    get:
+      operationId: getAdminUsers
+      tags: [Admin]
+      summary: 사용자 목록 조회
+      description: 전체 사용자 목록을 관리자 권한으로 조회합니다.
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, suspended, banned]
+          description: 상태 필터
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: 이메일 또는 사용자명 검색
+        - $ref: "#/components/parameters/LimitParam"
+        - $ref: "#/components/parameters/OffsetParam"
+      responses:
+        "200":
+          description: 사용자 목록 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/UserAdmin"
+                  pagination:
+                    $ref: "#/components/schemas/PaginationMeta"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /admin/users/{id}:
+    put:
+      operationId: updateAdminUser
+      tags: [Admin]
+      summary: 사용자 정보 수정
+      description: 관리자가 사용자 정보를 수정합니다.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserAdminRequest"
+      responses:
+        "200":
+          description: 사용자 수정 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/UserAdmin"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /admin/contents:
+    get:
+      operationId: getAdminContents
+      tags: [Admin]
+      summary: 콘텐츠 관리 목록
+      description: 전체 콘텐츠를 관리자 권한으로 조회합니다.
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [draft, published, archived, moderated, deleted]
+          description: 상태 필터
+        - name: category
+          in: query
+          schema:
+            $ref: "#/components/schemas/ContentCategory"
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: 제목 검색
+        - $ref: "#/components/parameters/LimitParam"
+        - $ref: "#/components/parameters/OffsetParam"
+      responses:
+        "200":
+          description: 콘텐츠 목록 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Content"
+                  pagination:
+                    $ref: "#/components/schemas/PaginationMeta"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /admin/contents/{id}/moderate:
+    post:
+      operationId: moderateContent
+      tags: [Admin]
+      summary: 콘텐츠 검열
+      description: 콘텐츠를 검열(승인, 거부, 삭제, 경고)합니다.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ModerateContentRequest"
+      responses:
+        "200":
+          description: 검열 완료
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Content"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
