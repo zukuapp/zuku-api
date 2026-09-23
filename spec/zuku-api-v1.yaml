@@ -140,7 +140,8 @@ components:
           type: string
           format: uri
           nullable: true
-          example: https://cdn.zuzunza.com/avatars/usr_01H8X9Y2Z3A4B5C6D7E8F9G0.jpg
+          example: >-
+            https://cdn.zuzunza.com/avatars/usr_01H8X9Y2Z3A4B5C6D7E8F9G0.jpg
         role:
           type: string
           enum: [user, creator, admin]
@@ -265,12 +266,14 @@ components:
           type: string
           format: uri
           nullable: true
-          example: https://cdn.zuzunza.com/media/cnt_01H8X9Y2Z3A4B5C6D7E8F9G0.mp4
+          example: >-
+            https://cdn.zuzunza.com/media/cnt_01H8X9Y2Z3A4B5C6D7E8F9G0.mp4
         thumbnail_url:
           type: string
           format: uri
           nullable: true
-          example: https://cdn.zuzunza.com/thumbs/cnt_01H8X9Y2Z3A4B5C6D7E8F9G0.jpg
+          example: >-
+            https://cdn.zuzunza.com/thumbs/cnt_01H8X9Y2Z3A4B5C6D7E8F9G0.jpg
         tags:
           type: array
           items:
@@ -642,7 +645,7 @@ components:
           example: usr_01H8X9Y2Z3A4B5C6D7E8F9G0
         handle:
           type: string
-          example: @creator_name
+          example: "@creator_name"
         display_name:
           type: string
           example: 크리에이터 이름
