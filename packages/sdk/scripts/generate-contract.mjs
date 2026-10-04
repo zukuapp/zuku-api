@@ -18,13 +18,14 @@ function type(s={}) {
  if(s.$ref)return s.$ref.split('/').at(-1);
  if('const' in s)return quote(s.const);
  if(s.enum)return s.enum.map(quote).join(' | ');
- if(s.oneOf||s.anyOf)return '('+(s.oneOf||s.anyOf).map(type).join(' | ')+')';
- if(s.allOf)return '('+s.allOf.map(type).join(' & ')+')';
+ if(s.oneOf||s.anyOf){const {oneOf,anyOf,...base}=s;const union='('+(oneOf||anyOf).map(type).join(' | ')+')';return base.type||base.properties||base.required ? '('+type(base)+' & '+union+')' : union;}
+ if(s.allOf){const {allOf,...base}=s;return '('+[...(base.type||base.properties||base.required?[type(base)]:[]),...allOf.map(type)].join(' & ')+')';}
  if(Array.isArray(s.type))return '('+s.type.map(t=>type({...s,type:t})).join(' | ')+')';
  if(s.format==='binary')return 'Blob';
  if(s.type==='array')return `Array<${type(s.items)}>`;
- if(s.type==='object'||s.properties){
+ if(s.type==='object'||s.properties||s.required){
   const props=Object.entries(s.properties||{}).map(([k,v])=>`${quote(k)}${(s.required||[]).includes(k)?'':'?'}: ${type(v)}`);
+  for(const key of s.required||[])if(!Object.hasOwn(s.properties||{},key))props.push(`${quote(key)}: unknown`);
   if(s.additionalProperties!==false)props.push('[key: string]: unknown');
   return '{ '+props.join('; ')+' }';
  }

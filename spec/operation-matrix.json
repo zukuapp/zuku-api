@@ -1,5 +1,5 @@
 {
-  "contractSha256": "0f78b5a7a4beecaba74c040800ce0b8a9a44b77248b9d0ff0fa417a233696524",
+  "contractSha256": "8b105b84765d8e6a2798b7016168bb0fca2dc0ab89a4c3328e51b4e033cda6c2",
   "operations": [
     {
       "operationId": "registerUser",

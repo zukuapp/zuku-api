@@ -31,6 +31,7 @@ export function validateSchema(schema: unknown, value: unknown): SchemaIssue[] {
   if (types.length && !types.some(t => t === 'null' ? input === null : t === 'object' ? record(input) : t === 'array' ? Array.isArray(input) : t === 'integer' ? typeof input === 'number' && Number.isSafeInteger(input) : t === 'number' ? typeof input === 'number' && Number.isFinite(input) : typeof input === t)) { add(path, 'type'); return; }
   if (typeof input === 'string') {
    const length = [...input].length;
+   if (typeof s['x-zuku-min-utf8-bytes'] === 'number' && new TextEncoder().encode(input).byteLength < s['x-zuku-min-utf8-bytes']) add(path,'minUtf8Bytes');
    if (typeof s.minLength === 'number' && length < s.minLength) add(path, 'minLength');
    if (typeof s.maxLength === 'number' && length > s.maxLength) add(path, 'maxLength');
    if (typeof s.pattern === 'string' && !new RegExp(s.pattern, 'u').test(input)) add(path, 'pattern');

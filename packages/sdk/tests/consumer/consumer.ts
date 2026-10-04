@@ -9,3 +9,8 @@ void typed;
 client.operations.getFeeds({query:{arbitrary:3}});
 // @ts-expect-error Required project name/body must be present.
 client.operations.createCloudProject({});
+
+// @ts-expect-error Login requires password and captcha even with identifier present.
+client.operations.loginUser({body:{identifier:'tester'}});
+// @ts-expect-error Native game type and draft status are constrained by the canonical request.
+client.operations.createContent({body:{category:'jump',type:'html5',title:'Game'}});

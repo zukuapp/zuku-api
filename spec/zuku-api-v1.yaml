@@ -172,9 +172,11 @@ components:
         password:
           type: string
           minLength: 1
+          x-zuku-min-utf8-bytes: 8
         password_confirm:
           type: string
           minLength: 1
+          x-zuku-min-utf8-bytes: 8
         handle:
           type: string
           minLength: 1
@@ -352,6 +354,7 @@ components:
         title:
           type: string
           minLength: 1
+          maxLength: 100
         description:
           type: string
         thumbnail_url:
@@ -364,8 +367,14 @@ components:
           type: array
           items:
             type: string
+          maxItems: 10
         age_rating:
           type: string
+          enum:
+          - all
+          - '12'
+          - '15'
+          - '18'
         hype:
           type: object
           properties: {}
@@ -394,18 +403,92 @@ components:
       - category
       - type
       - title
+      oneOf:
+      - type: object
+        properties:
+          category:
+            const: hype
+          type:
+            type: string
+            enum:
+            - interactive_longform
+            - horizontal_media
+            - photo_media
+        required:
+        - category
+        - type
+      - type: object
+        properties:
+          category:
+            const: swipe
+          type:
+            type: string
+            enum:
+            - vertical_video
+        required:
+        - category
+        - type
+      - type: object
+        properties:
+          category:
+            const: jump
+          type:
+            type: string
+            enum:
+            - game
+          jump:
+            type: object
+            properties:
+              status:
+                const: draft
+            required:
+            - status
+        required:
+        - category
+        - type
+        - jump
+      - type: object
+        properties:
+          category:
+            const: vive
+          type:
+            type: string
+            enum:
+            - literary_work
+            - serial_chapter
+            - short_essay
+        required:
+        - category
+        - type
+      - type: object
+        properties:
+          category:
+            const: vine
+          type:
+            type: string
+            enum:
+            - audio_track
+            - score_attach
+            - voice_clip
+            - utau_asset
+            - virtual_idol
+        required:
+        - category
+        - type
     UpdateContentRequest:
       type: object
       properties:
         title:
           type: string
           minLength: 1
+          maxLength: 100
         description:
           type: string
         tags:
           type: array
           items:
             type: string
+          maxItems: 10
         age_rating:
           type: string
         thumbnail_url:
@@ -1469,15 +1552,30 @@ paths:
               properties:
                 display_name:
                   type: string
+                  minLength: 1
+                  maxLength: 60
                 bio:
                   type: string
-                website:
+                  maxLength: 160
+                website_url:
                   type: string
+                  maxLength: 512
                 location:
+                  type: string
+                  maxLength: 64
+                banner_tone:
+                  type: string
+                  enum:
+                  - cyan
+                  - swipe
+                  - jump
+                  - slate
+                cover_url:
                   type: string
                 avatar_url:
                   type: string
               required: []
+              additionalProperties: false
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /feeds:
@@ -2601,11 +2699,12 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/Report'
-                      pagination:
-                        $ref: '#/components/schemas/Pagination'
+                      total:
+                        type: integer
+                        minimum: 0
                     required:
                     - reports
-                    - pagination
+                    - total
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
@@ -2631,7 +2730,7 @@ paths:
         schema:
           type: integer
           minimum: 1
-          maximum: 50
+          maximum: 100
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /admin/users:
@@ -3205,14 +3304,14 @@ paths:
                   data:
                     type: object
                     properties:
-                      contents:
+                      pagination:
+                        $ref: '#/components/schemas/PaginationMeta'
+                      recommendations:
                         type: array
                         items:
                           $ref: '#/components/schemas/Content'
-                      pagination:
-                        $ref: '#/components/schemas/PaginationMeta'
                     required:
-                    - contents
+                    - recommendations
                     - pagination
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
