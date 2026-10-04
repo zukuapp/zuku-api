@@ -1,0 +1,698 @@
+{
+  "contractSha256": "87357d79a4d321b6c7dac0f99e245bd8b704fb2f28041695c32fb883f516524e",
+  "operations": [
+    {
+      "operationId": "registerUser",
+      "method": "POST",
+      "path": "/auth/register",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "loginUser",
+      "method": "POST",
+      "path": "/auth/login",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "logoutUser",
+      "method": "POST",
+      "path": "/auth/logout",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "refreshToken",
+      "method": "POST",
+      "path": "/auth/refresh",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "getCurrentUser",
+      "method": "GET",
+      "path": "/auth/me",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "updateCurrentUser",
+      "method": "PATCH",
+      "path": "/auth/me",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "getFeeds",
+      "method": "GET",
+      "path": "/feeds",
+      "status": "implemented",
+      "retry": "safe-read"
+    },
+    {
+      "operationId": "getHypeFeed",
+      "method": "GET",
+      "path": "/feeds/hype",
+      "status": "implemented",
+      "retry": "safe-read"
+    },
+    {
+      "operationId": "getSwipeFeed",
+      "method": "GET",
+      "path": "/feeds/swipe",
+      "status": "implemented",
+      "retry": "safe-read"
+    },
+    {
+      "operationId": "getJumpFeed",
+      "method": "GET",
+      "path": "/feeds/jump",
+      "status": "implemented",
+      "retry": "safe-read"
+    },
+    {
+      "operationId": "getContent",
+      "method": "GET",
+      "path": "/contents/{id}",
+      "status": "implemented",
+      "retry": "safe-read"
+    },
+    {
+      "operationId": "deleteContent",
+      "method": "DELETE",
+      "path": "/contents/{id}",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "updateContent",
+      "method": "PATCH",
+      "path": "/contents/{id}",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "createContent",
+      "method": "POST",
+      "path": "/contents",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "likeContent",
+      "method": "POST",
+      "path": "/contents/{id}/like",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "bookmarkContent",
+      "method": "POST",
+      "path": "/contents/{id}/bookmark",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "getContentComments",
+      "method": "GET",
+      "path": "/contents/{id}/comments",
+      "status": "implemented",
+      "retry": "safe-read"
+    },
+    {
+      "operationId": "createComment",
+      "method": "POST",
+      "path": "/contents/{id}/comments",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "getJumpGames",
+      "method": "GET",
+      "path": "/jump/games",
+      "status": "implemented",
+      "retry": "safe-read"
+    },
+    {
+      "operationId": "getJumpGame",
+      "method": "GET",
+      "path": "/jump/games/{id}",
+      "status": "implemented",
+      "retry": "safe-read"
+    },
+    {
+      "operationId": "playJumpGame",
+      "method": "POST",
+      "path": "/jump/games/{id}/play",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "getCreator",
+      "method": "GET",
+      "path": "/creators/{handle}",
+      "status": "implemented",
+      "retry": "safe-read"
+    },
+    {
+      "operationId": "getCreatorContents",
+      "method": "GET",
+      "path": "/creators/{handle}/contents",
+      "status": "implemented",
+      "retry": "safe-read"
+    },
+    {
+      "operationId": "createReport",
+      "method": "POST",
+      "path": "/reports",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "listReports",
+      "method": "GET",
+      "path": "/reports",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "getAdminUsers",
+      "method": "GET",
+      "path": "/admin/users",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "updateAdminUser",
+      "method": "PATCH",
+      "path": "/admin/users/{id}",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "getViveFeed",
+      "method": "GET",
+      "path": "/feeds/vive",
+      "status": "implemented",
+      "retry": "safe-read"
+    },
+    {
+      "operationId": "getVineFeed",
+      "method": "GET",
+      "path": "/feeds/vine",
+      "status": "implemented",
+      "retry": "safe-read"
+    },
+    {
+      "operationId": "listSessions",
+      "method": "GET",
+      "path": "/auth/sessions",
+      "status": "implemented",
+      "retry": "safe-read"
+    },
+    {
+      "operationId": "revokeSession",
+      "method": "DELETE",
+      "path": "/auth/sessions/{id}",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "activateSession",
+      "method": "POST",
+      "path": "/auth/session",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "publishContent",
+      "method": "POST",
+      "path": "/contents/{id}/publish",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "recordContentView",
+      "method": "POST",
+      "path": "/contents/{id}/view",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "updateComment",
+      "method": "PATCH",
+      "path": "/comments/{id}",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "deleteComment",
+      "method": "DELETE",
+      "path": "/comments/{id}",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "getContentRecommendations",
+      "method": "GET",
+      "path": "/contents/{id}/recommendations",
+      "status": "implemented",
+      "retry": "safe-read"
+    },
+    {
+      "operationId": "getGamePackage",
+      "method": "GET",
+      "path": "/jump/games/{id}/package",
+      "status": "implemented",
+      "retry": "safe-read"
+    },
+    {
+      "operationId": "streamJumpGame",
+      "method": "POST",
+      "path": "/jump/games/{id}/stream",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "getJumpSwf",
+      "method": "POST",
+      "path": "/jump/games/{id}/swf",
+      "status": "implemented",
+      "retry": "safe-read"
+    },
+    {
+      "operationId": "getGamePackageManifest",
+      "method": "GET",
+      "path": "/jump/games/{id}/package-manifest",
+      "status": "implemented",
+      "retry": "safe-read"
+    },
+    {
+      "operationId": "followCreator",
+      "method": "POST",
+      "path": "/creators/{handle}/follow",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "getCreatorFollowers",
+      "method": "GET",
+      "path": "/creators/{handle}/followers",
+      "status": "implemented",
+      "retry": "safe-read"
+    },
+    {
+      "operationId": "getCreatorFollowing",
+      "method": "GET",
+      "path": "/creators/{handle}/following",
+      "status": "implemented",
+      "retry": "safe-read"
+    },
+    {
+      "operationId": "listApiKeys",
+      "method": "GET",
+      "path": "/developer/keys",
+      "status": "implemented",
+      "retry": "safe-read"
+    },
+    {
+      "operationId": "createApiKey",
+      "method": "POST",
+      "path": "/developer/keys",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "revokeApiKey",
+      "method": "DELETE",
+      "path": "/developer/keys/{id}",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "uploadMedia",
+      "method": "POST",
+      "path": "/uploads",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "getGameOAuthUser",
+      "method": "GET",
+      "path": "/oauth/me",
+      "status": "implemented",
+      "retry": "safe-read"
+    },
+    {
+      "operationId": "getDeployQuota",
+      "method": "GET",
+      "path": "/oauth/deploy-quota",
+      "status": "implemented",
+      "retry": "safe-read"
+    },
+    {
+      "operationId": "getGameDeployment",
+      "method": "GET",
+      "path": "/oauth/games/deployments/{key}",
+      "status": "implemented",
+      "retry": "safe-read"
+    },
+    {
+      "operationId": "listCloudProjects",
+      "method": "GET",
+      "path": "/cloud/projects",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "createCloudProject",
+      "method": "POST",
+      "path": "/cloud/projects",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "getCloudBalance",
+      "method": "GET",
+      "path": "/cloud/economy/balance",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "getCloudVariable",
+      "method": "POST",
+      "path": "/cloud/vars/get",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "mutateCloudVariable",
+      "method": "POST",
+      "path": "/cloud/vars/mutate",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "saveCloudSlot",
+      "method": "POST",
+      "path": "/cloud/saves/save",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "loadCloudSlot",
+      "method": "POST",
+      "path": "/cloud/saves/load",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "listCloudSlots",
+      "method": "GET",
+      "path": "/cloud/saves/list",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "listCloudProducts",
+      "method": "GET",
+      "path": "/cloud/pay/products",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "upsertCloudProduct",
+      "method": "POST",
+      "path": "/cloud/pay/products",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "createCloudPaymentSession",
+      "method": "POST",
+      "path": "/cloud/pay/session",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "confirmCloudPayment",
+      "method": "POST",
+      "path": "/cloud/pay/confirm",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "listCloudEntitlements",
+      "method": "GET",
+      "path": "/cloud/pay/entitlements",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "listCloudFunctions",
+      "method": "GET",
+      "path": "/cloud/functions",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "upsertCloudFunction",
+      "method": "POST",
+      "path": "/cloud/functions",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "publishCloudFunction",
+      "method": "POST",
+      "path": "/cloud/functions/{id}/publish",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "invokeCloudFunction",
+      "method": "POST",
+      "path": "/cloud/functions/{id}/invoke",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "getCloudDashboard",
+      "method": "GET",
+      "path": "/cloud/dashboard/summary",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "getCloudBillingCatalog",
+      "method": "GET",
+      "path": "/cloud/billing/catalog",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "getCloudBillingAccount",
+      "method": "GET",
+      "path": "/cloud/billing/account",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "getCloudVm",
+      "method": "GET",
+      "path": "/cloud/vm",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "createCloudVm",
+      "method": "POST",
+      "path": "/cloud/vm",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "setCloudSpendLimit",
+      "method": "POST",
+      "path": "/cloud/billing/limit",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "startCloudVm",
+      "method": "POST",
+      "path": "/cloud/vm/start",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "stopCloudVm",
+      "method": "POST",
+      "path": "/cloud/vm/stop",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "deleteCloudVm",
+      "method": "POST",
+      "path": "/cloud/vm/delete",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "verifyTotpLogin",
+      "method": "POST",
+      "path": "/auth/totp/verify",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "createCaptchaChallenge",
+      "method": "POST",
+      "path": "/captcha/challenge",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "verifyCaptchaToken",
+      "method": "POST",
+      "path": "/captcha/verify",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "createGameDeviceAuthorization",
+      "method": "POST",
+      "path": "/oauth/device/authorization",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "exchangeGameOAuthToken",
+      "method": "POST",
+      "path": "/oauth/token",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "revokeGameOAuthToken",
+      "method": "POST",
+      "path": "/oauth/revoke",
+      "status": "implemented",
+      "retry": "never"
+    },
+    {
+      "operationId": "oauthRedirect",
+      "method": "GET",
+      "path": "/auth/oauth/{provider}",
+      "status": "unsupported",
+      "aliasOf": null,
+      "reason": "No matching implemented server route."
+    },
+    {
+      "operationId": "unlikeContent",
+      "method": "DELETE",
+      "path": "/contents/{id}/like",
+      "status": "unsupported",
+      "aliasOf": null,
+      "reason": "No matching implemented server route."
+    },
+    {
+      "operationId": "getHypeContent",
+      "method": "GET",
+      "path": "/hype/{id}",
+      "status": "alias",
+      "aliasOf": "getContent",
+      "reason": "Hype uses the unified content detail route."
+    },
+    {
+      "operationId": "interactHypeContent",
+      "method": "POST",
+      "path": "/hype/{id}/interact",
+      "status": "unsupported",
+      "aliasOf": null,
+      "reason": "No matching implemented server route."
+    },
+    {
+      "operationId": "getSwipeFeedAlt",
+      "method": "GET",
+      "path": "/swipe/feed",
+      "status": "alias",
+      "aliasOf": "getSwipeFeed",
+      "reason": "Swipe uses the canonical feed with mode=stream."
+    },
+    {
+      "operationId": "recordSwipeWatch",
+      "method": "POST",
+      "path": "/swipe/{id}/watch",
+      "status": "unsupported",
+      "aliasOf": null,
+      "reason": "No matching implemented server route."
+    },
+    {
+      "operationId": "createGameReview",
+      "method": "POST",
+      "path": "/jump/games/{id}/review",
+      "status": "unsupported",
+      "aliasOf": null,
+      "reason": "No matching implemented server route."
+    },
+    {
+      "operationId": "getGameLeaderboard",
+      "method": "GET",
+      "path": "/jump/games/{id}/leaderboard",
+      "status": "unsupported",
+      "aliasOf": null,
+      "reason": "No matching implemented server route."
+    },
+    {
+      "operationId": "unfollowCreator",
+      "method": "DELETE",
+      "path": "/creators/{id}/follow",
+      "status": "unsupported",
+      "aliasOf": null,
+      "reason": "No matching implemented server route."
+    },
+    {
+      "operationId": "getCreatorAnalytics",
+      "method": "GET",
+      "path": "/creators/{id}/analytics",
+      "status": "unsupported",
+      "aliasOf": null,
+      "reason": "No matching implemented server route."
+    },
+    {
+      "operationId": "getReport",
+      "method": "GET",
+      "path": "/reports/{id}",
+      "status": "unsupported",
+      "aliasOf": null,
+      "reason": "No matching implemented server route."
+    },
+    {
+      "operationId": "getAdminDashboard",
+      "method": "GET",
+      "path": "/admin/dashboard",
+      "status": "unsupported",
+      "aliasOf": null,
+      "reason": "No matching implemented server route."
+    },
+    {
+      "operationId": "getAdminContents",
+      "method": "GET",
+      "path": "/admin/contents",
+      "status": "unsupported",
+      "aliasOf": null,
+      "reason": "No matching implemented server route."
+    },
+    {
+      "operationId": "moderateContent",
+      "method": "POST",
+      "path": "/admin/contents/{id}/moderate",
+      "status": "unsupported",
+      "aliasOf": null,
+      "reason": "No matching implemented server route."
+    }
+  ]
+}

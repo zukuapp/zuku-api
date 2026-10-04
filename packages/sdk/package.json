@@ -1,18 +1,48 @@
-﻿{
+{
   "name": "@zuku/sdk",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "TypeScript SDK for the zuku Platform API",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "tsc",
-    "typecheck": "tsc --noEmit",
-    "prepublishOnly": "npm run build"
+    "generate": "node scripts/generate-contract.mjs",
+    "generate:check": "node scripts/generate-contract.mjs --check",
+    "build": "npm run generate && tsc",
+    "typecheck": "npm run generate:check && tsc --noEmit",
+    "test": "npm run build && node --test tests/*.test.mjs",
+    "prepack": "npm run build",
+    "prepublishOnly": "npm run typecheck && npm test",
+    "test:packed": "node scripts/test-packed.mjs"
   },
-  "keywords": ["zuku", "shizuku", "api", "sdk", "ugc"],
+  "keywords": [
+    "zuku",
+    "shizuku",
+    "api",
+    "sdk",
+    "ugc"
+  ],
   "license": "SOL",
   "devDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "5.9.3",
+    "yaml": "2.9.1"
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./game-bridge": {
+      "types": "./dist/game-bridge.d.ts",
+      "import": "./dist/game-bridge.js",
+      "default": "./dist/game-bridge.js"
+    }
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
