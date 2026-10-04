@@ -1,8 +1,11 @@
+---
 openapi: 3.1.0
 info:
   title: ZUKU Platform API
-  description: Canonical public ZUKU REST contract. Generated SDK types and validators use this file. Availability
-    metadata distinguishes implemented server routes from legacy contract gaps.
+  description: Canonical public ZUKU REST contract. Generated
+    SDK types and validators use this file. Availability metadata
+    distinguishes implemented server routes from legacy contract
+    gaps.
   version: 1.1.0
   contact:
     name: ZUKU API Support
@@ -12,38 +15,40 @@ info:
     name: Proprietary
     url: https://zuzunza.com/license
 servers:
-- url: https://www.zuzunza.com/api/v1
-  description: Production API (canonical)
-- url: https://api.zuzunza.com/v1
-  description: Legacy hostname; not a working production API base. Do not use as fallback.
+  - url: https://www.zuzunza.com/api/v1
+    description: Production API (canonical)
+  - url: https://api.zuzunza.com/v1
+    description: Legacy hostname; not a working production API
+      base. Do not use as fallback.
 tags:
-- name: Auth
-  description: 인증 및 사용자 관리
-- name: Feeds
-  description: 피드 조회 (Hype, Swipe, Jump 통합)
-- name: Contents
-  description: 콘텐츠 CRUD 및 상호작용
-- name: Hype
-  description: Hype 콘텐츠 인터랙션
-- name: Swipe
-  description: Swipe 콘텐츠 시청
-- name: Jump
-  description: Jump 게임 플랫폼
-- name: Creators
-  description: 크리에이터 프로필 및 팔로우
-- name: Moderation
-  description: 콘텐츠 신고 및 검열
-- name: Admin
-  description: 관리자 전용 엔드포인트
+  - name: Auth
+    description: 인증 및 사용자 관리
+  - name: Feeds
+    description: 피드 조회 (Hype, Swipe, Jump 통합)
+  - name: Contents
+    description: 콘텐츠 CRUD 및 상호작용
+  - name: Hype
+    description: Hype 콘텐츠 인터랙션
+  - name: Swipe
+    description: Swipe 콘텐츠 시청
+  - name: Jump
+    description: Jump 게임 플랫폼
+  - name: Creators
+    description: 크리에이터 프로필 및 팔로우
+  - name: Moderation
+    description: 콘텐츠 신고 및 검열
+  - name: Admin
+    description: 관리자 전용 엔드포인트
 security:
-- BearerAuth: []
+  - BearerAuth: []
 components:
   securitySchemes:
     BearerAuth:
       type: http
       scheme: bearer
       bearerFormat: access_token
-      description: Account access token or scoped Game CLI token, where supported.
+      description: Account access token or scoped Game CLI token,
+        where supported.
     ApiKeyAuth:
       type: apiKey
       in: header
@@ -53,15 +58,16 @@ components:
       type: apiKey
       in: cookie
       name: zuku_session
-      description: Explicit same-origin browser sessions only; native Game CLI OAuth rejects cookies.
+      description: Explicit same-origin browser sessions only;
+        native Game CLI OAuth rejects cookies.
   schemas:
     PaginationMeta:
       type: object
       required:
-      - total
-      - limit
-      - offset
-      - has_more
+        - total
+        - limit
+        - offset
+        - has_more
       properties:
         total:
           type: integer
@@ -101,16 +107,16 @@ components:
                   message:
                     type: string
                 required:
-                - field
-                - message
+                  - field
+                  - message
           required:
-          - code
-          - message
+            - code
+            - message
         meta:
           $ref: '#/components/schemas/ApiMeta'
       required:
-      - success
-      - error
+        - success
+        - error
     SuccessResponse:
       type: object
       properties:
@@ -123,11 +129,11 @@ components:
     User:
       type: object
       required:
-      - id
-      - email
-      - handle
-      - created_at
-      - profile_completion_status
+        - id
+        - email
+        - handle
+        - created_at
+        - profile_completion_status
       properties:
         id:
           type: string
@@ -142,8 +148,8 @@ components:
           example: 시즈쿠 유저
         avatar_url:
           type:
-          - string
-          - 'null'
+            - string
+            - 'null'
         role:
           type: string
         created_at:
@@ -157,8 +163,8 @@ components:
         profile_completion_status:
           type: string
           enum:
-          - incomplete
-          - complete
+            - incomplete
+            - complete
           description: 추가 프로필 입력 상태. 최소 가입 직후에는 incomplete입니다.
         handle:
           type: string
@@ -186,11 +192,11 @@ components:
           type: string
           minLength: 1
       required:
-      - email
-      - password
-      - password_confirm
-      - handle
-      - zcaptcha_token
+        - email
+        - password
+        - password_confirm
+        - handle
+        - zcaptcha_token
     LoginRequest:
       type: object
       properties:
@@ -208,13 +214,13 @@ components:
           type: string
           minLength: 1
       required:
-      - password
-      - zcaptcha_token
+        - password
+        - zcaptcha_token
       anyOf:
-      - required:
-        - identifier
-      - required:
-        - email
+        - required:
+            - identifier
+        - required:
+            - email
     TokenResponse:
       type: object
       properties:
@@ -227,14 +233,14 @@ components:
         expires_in:
           type: integer
       required:
-      - access_token
-      - refresh_token
-      - token_type
-      - expires_in
+        - access_token
+        - refresh_token
+        - token_type
+        - expires_in
     RefreshRequest:
       type: object
       required:
-      - refresh_token
+        - refresh_token
       properties:
         refresh_token:
           type: string
@@ -242,25 +248,25 @@ components:
     OAuthProvider:
       type: string
       enum:
-      - github
-      - google
-      - apple
+        - github
+        - google
+        - apple
     ContentCategory:
       type: string
       enum:
-      - hype
-      - swipe
-      - jump
-      - vive
-      - vine
+        - hype
+        - swipe
+        - jump
+        - vive
+        - vine
     ContentStatus:
       type: string
       enum:
-      - draft
-      - published
-      - archived
-      - moderated
-      - deleted
+        - draft
+        - published
+        - archived
+        - moderated
+        - deleted
     Content:
       type: object
       properties:
@@ -278,8 +284,8 @@ components:
           type: string
         media_url:
           type:
-          - string
-          - 'null'
+            - string
+            - 'null'
         creator:
           $ref: '#/components/schemas/CreatorSummary'
         stats:
@@ -301,11 +307,11 @@ components:
               type: integer
               minimum: 0
           required:
-          - like_count
-          - comment_count
-          - view_count
-          - share_count
-          - bookmark_count
+            - like_count
+            - comment_count
+            - view_count
+            - share_count
+            - bookmark_count
         tags:
           type: array
           items:
@@ -335,14 +341,14 @@ components:
           properties: {}
           required: []
       required:
-      - id
-      - category
-      - type
-      - title
-      - creator
-      - stats
-      - created_at
-      - updated_at
+        - id
+        - category
+        - type
+        - title
+        - creator
+        - stats
+        - created_at
+        - updated_at
     CreateContentRequest:
       type: object
       properties:
@@ -361,8 +367,8 @@ components:
           type: string
         media_url:
           type:
-          - string
-          - 'null'
+            - string
+            - 'null'
         tags:
           type: array
           items:
@@ -371,10 +377,10 @@ components:
         age_rating:
           type: string
           enum:
-          - all
-          - '12'
-          - '15'
-          - '18'
+            - all
+            - '12'
+            - '15'
+            - '18'
         hype:
           type: object
           properties: {}
@@ -400,81 +406,81 @@ components:
         source_surface:
           type: string
       required:
-      - category
-      - type
-      - title
+        - category
+        - type
+        - title
       oneOf:
-      - type: object
-        properties:
-          category:
-            const: hype
-          type:
-            type: string
-            enum:
-            - interactive_longform
-            - horizontal_media
-            - photo_media
-        required:
-        - category
-        - type
-      - type: object
-        properties:
-          category:
-            const: swipe
-          type:
-            type: string
-            enum:
-            - vertical_video
-        required:
-        - category
-        - type
-      - type: object
-        properties:
-          category:
-            const: jump
-          type:
-            type: string
-            enum:
-            - game
-          jump:
-            type: object
-            properties:
-              status:
-                const: draft
-            required:
-            - status
-        required:
-        - category
-        - type
-        - jump
-      - type: object
-        properties:
-          category:
-            const: vive
-          type:
-            type: string
-            enum:
-            - literary_work
-            - serial_chapter
-            - short_essay
-        required:
-        - category
-        - type
-      - type: object
-        properties:
-          category:
-            const: vine
-          type:
-            type: string
-            enum:
-            - audio_track
-            - score_attach
-            - voice_clip
-            - utau_asset
-            - virtual_idol
-        required:
-        - category
-        - type
+        - type: object
+          properties:
+            category:
+              const: hype
+            type:
+              type: string
+              enum:
+                - interactive_longform
+                - horizontal_media
+                - photo_media
+          required:
+            - category
+            - type
+        - type: object
+          properties:
+            category:
+              const: swipe
+            type:
+              type: string
+              enum:
+                - vertical_video
+          required:
+            - category
+            - type
+        - type: object
+          properties:
+            category:
+              const: jump
+            type:
+              type: string
+              enum:
+                - game
+            jump:
+              type: object
+              properties:
+                status:
+                  const: draft
+              required:
+                - status
+          required:
+            - category
+            - type
+            - jump
+        - type: object
+          properties:
+            category:
+              const: vive
+            type:
+              type: string
+              enum:
+                - literary_work
+                - serial_chapter
+                - short_essay
+          required:
+            - category
+            - type
+        - type: object
+          properties:
+            category:
+              const: vine
+            type:
+              type: string
+              enum:
+                - audio_track
+                - score_attach
+                - voice_clip
+                - utau_asset
+                - virtual_idol
+          required:
+            - category
+            - type
     UpdateContentRequest:
       type: object
       properties:
@@ -514,14 +520,14 @@ components:
           required: []
         parent_id:
           type:
-          - string
-          - 'null'
+            - string
+            - 'null'
         is_deleted:
           type: boolean
       required:
-      - id
-      - body
-      - created_at
+        - id
+        - body
+        - created_at
     CreateCommentRequest:
       type: object
       properties:
@@ -531,10 +537,10 @@ components:
           maxLength: 1000
         parent_id:
           type:
-          - string
-          - 'null'
+            - string
+            - 'null'
       required:
-      - body
+        - body
     FeedFilter:
       type: object
       properties:
@@ -543,9 +549,9 @@ components:
         sort:
           type: string
           enum:
-          - latest
-          - popular
-          - trending
+            - latest
+            - popular
+            - trending
           default: latest
         limit:
           type: integer
@@ -565,67 +571,67 @@ components:
             $ref: '#/components/schemas/Content'
         pagination:
           anyOf:
-          - $ref: '#/components/schemas/Pagination'
-          - $ref: '#/components/schemas/StreamPagination'
+            - $ref: '#/components/schemas/Pagination'
+            - $ref: '#/components/schemas/StreamPagination'
         sort:
           type: string
       required:
-      - feeds
-      - pagination
-      - sort
+        - feeds
+        - pagination
+        - sort
     HypeContent:
       allOf:
-      - $ref: '#/components/schemas/Content'
-      - type: object
-        properties:
-          hype_score:
-            type: number
-            format: float
-            description: 인기도 점수 (0-100)
-            example: 87.5
-          interaction_count:
-            type: integer
-            example: 4521
+        - $ref: '#/components/schemas/Content'
+        - type: object
+          properties:
+            hype_score:
+              type: number
+              format: float
+              description: 인기도 점수 (0-100)
+              example: 87.5
+            interaction_count:
+              type: integer
+              example: 4521
     HypeInteractRequest:
       type: object
       required:
-      - action
+        - action
       properties:
         action:
           type: string
           enum:
-          - like
-          - super_like
-          - share
-          - comment
+            - like
+            - super_like
+            - share
+            - comment
           example: like
         comment_text:
           type:
-          - string
-          - 'null'
+            - string
+            - 'null'
           maxLength: 500
           example: 대박이네요!
     SwipeContent:
       allOf:
-      - $ref: '#/components/schemas/Content'
-      - type: object
-        properties:
-          swipe_data:
-            type: object
-            properties:
-              full_duration:
-                type: integer
-                description: 전체 영상 길이 (초)
-                example: 15
-              preview_duration:
-                type: integer
-                description: 미리보기 길이 (초)
-                example: 5
-              cta_text:
-                type:
-                - string
-                - 'null'
-                example: 자세히 보기
+        - $ref: '#/components/schemas/Content'
+        - type: object
+          properties:
+            swipe_data:
+              type: object
+              properties:
+                full_duration:
+                  type: integer
+                  description: 전체 영상 길이 (초)
+                  example: 15
+                preview_duration:
+                  type: integer
+                  description: 미리보기 길이 (초)
+                  example: 5
+                cta_text:
+                  type:
+                    - string
+                    - 'null'
+                  example: 자세히 보기
     SwipeWatchRequest:
       type: object
       properties:
@@ -646,14 +652,14 @@ components:
           type: string
           minLength: 1
       required:
-      - content_id
+        - content_id
     GameReview:
       type: object
       required:
-      - id
-      - user_id
-      - rating
-      - created_at
+        - id
+        - user_id
+        - rating
+        - created_at
       properties:
         id:
           type: string
@@ -669,8 +675,8 @@ components:
           example: 5
         text:
           type:
-          - string
-          - 'null'
+            - string
+            - 'null'
           example: 정말 재미있어요!
         created_at:
           type: string
@@ -678,7 +684,7 @@ components:
     CreateReviewRequest:
       type: object
       required:
-      - rating
+        - rating
       properties:
         rating:
           type: integer
@@ -687,16 +693,16 @@ components:
           example: 5
         text:
           type:
-          - string
-          - 'null'
+            - string
+            - 'null'
           maxLength: 1000
           example: 정말 재미있어요!
     LeaderboardEntry:
       type: object
       required:
-      - rank
-      - user_id
-      - score
+        - rank
+        - user_id
+        - score
       properties:
         rank:
           type: integer
@@ -712,8 +718,8 @@ components:
               type: string
             avatar_url:
               type:
-              - string
-              - 'null'
+                - string
+                - 'null'
         score:
           type: integer
           example: 9800
@@ -736,11 +742,11 @@ components:
         follower_count:
           type: integer
       required:
-      - id
-      - handle
-      - display_name
-      - avatar_url
-      - is_verified
+        - id
+        - handle
+        - display_name
+        - avatar_url
+        - is_verified
     Creator:
       type: object
       properties:
@@ -752,31 +758,31 @@ components:
           type: string
         avatar_url:
           type:
-          - string
-          - 'null'
+            - string
+            - 'null'
         is_verified:
           type: boolean
         bio:
           type:
-          - string
-          - 'null'
+            - string
+            - 'null'
         follower_count:
           type: integer
         is_following:
           type: boolean
       required:
-      - id
-      - handle
-      - display_name
+        - id
+        - handle
+        - display_name
     CreatorAnalytics:
       type: object
       properties:
         period:
           type: string
           enum:
-          - 7d
-          - 30d
-          - 90d
+            - 7d
+            - 30d
+            - 90d
           example: 30d
         total_views:
           type: integer
@@ -823,14 +829,14 @@ components:
         created_at:
           type: string
       required:
-      - id
-      - content_id
-      - reporter_id
-      - report_type
-      - details
-      - status
-      - priority
-      - created_at
+        - id
+        - content_id
+        - reporter_id
+        - report_type
+        - details
+        - status
+        - priority
+        - created_at
     CreateReportRequest:
       type: object
       properties:
@@ -839,21 +845,21 @@ components:
         report_type:
           type: string
           enum:
-          - violence
-          - sexual
-          - hate_speech
-          - spam
-          - copyright
-          - misinformation
-          - harassment
-          - self_harm
-          - illegal
-          - other
+            - violence
+            - sexual
+            - hate_speech
+            - spam
+            - copyright
+            - misinformation
+            - harassment
+            - self_harm
+            - illegal
+            - other
         details:
           type: string
       required:
-      - content_id
-      - report_type
+        - content_id
+        - report_type
     AdminDashboard:
       type: object
       properties:
@@ -878,9 +884,9 @@ components:
         system_status:
           type: string
           enum:
-          - healthy
-          - degraded
-          - down
+            - healthy
+            - degraded
+            - down
           example: healthy
     UserAdmin:
       type: object
@@ -897,8 +903,8 @@ components:
           type: string
         avatar_url:
           type:
-          - string
-          - 'null'
+            - string
+            - 'null'
         is_verified:
           type: boolean
         is_suspended:
@@ -907,27 +913,27 @@ components:
           type: string
         last_login_at:
           type:
-          - string
-          - 'null'
+            - string
+            - 'null'
         stats:
           type: object
           properties: {}
           required: []
       required:
-      - id
-      - email
-      - handle
-      - role
-      - is_suspended
-      - created_at
+        - id
+        - email
+        - handle
+        - role
+        - is_suspended
+        - created_at
     UpdateUserAdminRequest:
       type: object
       properties:
         role:
           type: string
           enum:
-          - user
-          - admin
+            - user
+            - admin
         is_suspended:
           type: boolean
         reason:
@@ -935,27 +941,27 @@ components:
       required: []
       additionalProperties: false
       anyOf:
-      - required:
-        - role
-      - required:
-        - is_suspended
+        - required:
+            - role
+        - required:
+            - is_suspended
     ModerateContentRequest:
       type: object
       required:
-      - action
+        - action
       properties:
         action:
           type: string
           enum:
-          - approve
-          - reject
-          - remove
-          - warn
+            - approve
+            - reject
+            - remove
+            - warn
           example: approve
         reason:
           type:
-          - string
-          - 'null'
+            - string
+            - 'null'
           maxLength: 2000
           example: 콘텐츠 검열 기준 충족
     ApiMeta:
@@ -968,7 +974,7 @@ components:
         request_id:
           type: string
       required:
-      - version
+        - version
     JsonValue:
       description: Any JSON value (serialized safely by the transport).
     Pagination:
@@ -992,21 +998,21 @@ components:
           type: boolean
         next_cursor:
           type:
-          - string
-          - 'null'
+            - string
+            - 'null'
         prev_cursor:
           type:
-          - string
-          - 'null'
+            - string
+            - 'null'
       required:
-      - page
-      - per_page
-      - total
-      - total_pages
-      - has_next
-      - has_prev
-      - next_cursor
-      - prev_cursor
+        - page
+        - per_page
+        - total
+        - total_pages
+        - has_next
+        - has_prev
+        - next_cursor
+        - prev_cursor
     StreamPagination:
       type: object
       properties:
@@ -1017,12 +1023,12 @@ components:
           type: boolean
         next_cursor:
           type:
-          - string
-          - 'null'
+            - string
+            - 'null'
       required:
-      - per_page
-      - has_next
-      - next_cursor
+        - per_page
+        - has_next
+        - next_cursor
     CloudProject:
       type: object
       properties:
@@ -1032,21 +1038,21 @@ components:
           type: string
         description:
           type:
-          - string
-          - 'null'
+            - string
+            - 'null'
         jump_content_id:
           type:
-          - string
-          - 'null'
+            - string
+            - 'null'
         status:
           type: string
         created_at:
           type: string
       required:
-      - id
-      - name
-      - status
-      - created_at
+        - id
+        - name
+        - status
+        - created_at
     CloudVariable:
       type: object
       properties:
@@ -1055,27 +1061,27 @@ components:
         scope:
           type: string
           enum:
-          - global
-          - user
+            - global
+            - user
         valueNum:
           type:
-          - integer
-          - 'null'
+            - integer
+            - 'null'
         valueText:
           type:
-          - string
-          - 'null'
+            - string
+            - 'null'
         version:
           type: integer
           minimum: 0
         updatedAt:
           type: string
       required:
-      - key
-      - scope
-      - valueNum
-      - valueText
-      - version
+        - key
+        - scope
+        - valueNum
+        - valueText
+        - version
     CloudSave:
       type: object
       properties:
@@ -1090,10 +1096,10 @@ components:
         data:
           $ref: '#/components/schemas/JsonValue'
       required:
-      - slot
-      - version
-      - byteSize
-      - updatedAt
+        - slot
+        - version
+        - byteSize
+        - updatedAt
     CloudProduct:
       type: object
       properties:
@@ -1118,14 +1124,14 @@ components:
         pointGrantEnabled:
           type: boolean
       required:
-      - id
-      - sku
-      - name
-      - priceKrw
-      - kind
-      - fulfillment
-      - status
-      - pointGrantEnabled
+        - id
+        - sku
+        - name
+        - priceKrw
+        - kind
+        - fulfillment
+        - status
+        - pointGrantEnabled
     CloudFunction:
       type: object
       properties:
@@ -1142,12 +1148,12 @@ components:
         updatedAt:
           type: string
       required:
-      - id
-      - name
-      - scanScore
-      - status
-      - version
-      - updatedAt
+        - id
+        - name
+        - scanScore
+        - status
+        - version
+        - updatedAt
     GameDeployment:
       type: object
       properties:
@@ -1159,12 +1165,12 @@ components:
           type: string
         reserved_at:
           type:
-          - string
-          - 'null'
+            - string
+            - 'null'
         completed_at:
           type:
-          - string
-          - 'null'
+            - string
+            - 'null'
         package_sha256:
           type: string
         size_bytes:
@@ -1174,13 +1180,13 @@ components:
         source_verified:
           type: boolean
       required:
-      - idempotency_key
-      - content_id
-      - status
-      - reserved_at
-      - completed_at
-      - package_sha256
-      - size_bytes
+        - idempotency_key
+        - content_id
+        - status
+        - reserved_at
+        - completed_at
+        - package_sha256
+        - size_bytes
   parameters:
     LimitParam:
       name: limit
@@ -1205,9 +1211,9 @@ components:
       schema:
         type: string
         enum:
-        - latest
-        - popular
-        - trending
+          - latest
+          - popular
+          - trending
         default: latest
       description: 정렬 기준
   responses:
@@ -1222,8 +1228,8 @@ components:
               code: VALIDATION_ERROR
               message: 요청 필드가 유효하지 않습니다
               details:
-              - field: title
-                message: 제목은 1자 이상이어야 합니다
+                - field: title
+                  message: 제목은 1자 이상이어야 합니다
     Unauthorized:
       description: 인증 필요
       content:
@@ -1297,7 +1303,7 @@ paths:
       operationId: registerUser
       summary: registerUser
       tags:
-      - Auth
+        - Auth
       x-zuku-availability: implemented
       responses:
         '201':
@@ -1317,14 +1323,14 @@ paths:
                       tokens:
                         $ref: '#/components/schemas/TokenResponse'
                     required:
-                    - user
-                    - tokens
+                      - user
+                      - tokens
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -1346,7 +1352,7 @@ paths:
       operationId: loginUser
       summary: loginUser
       tags:
-      - Auth
+        - Auth
       x-zuku-availability: implemented
       responses:
         '200':
@@ -1360,33 +1366,33 @@ paths:
                     const: true
                   data:
                     oneOf:
-                    - type: object
-                      properties:
-                        user:
-                          $ref: '#/components/schemas/User'
-                        tokens:
-                          $ref: '#/components/schemas/TokenResponse'
-                      required:
-                      - user
-                      - tokens
-                    - type: object
-                      properties:
-                        requires_totp:
-                          const: true
-                        challenge_token:
-                          type: string
-                        expires_in:
-                          type: integer
-                      required:
-                      - requires_totp
-                      - challenge_token
-                      - expires_in
+                      - type: object
+                        properties:
+                          user:
+                            $ref: '#/components/schemas/User'
+                          tokens:
+                            $ref: '#/components/schemas/TokenResponse'
+                        required:
+                          - user
+                          - tokens
+                      - type: object
+                        properties:
+                          requires_totp:
+                            const: true
+                          challenge_token:
+                            type: string
+                          expires_in:
+                            type: integer
+                        required:
+                          - requires_totp
+                          - challenge_token
+                          - expires_in
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -1408,7 +1414,7 @@ paths:
       operationId: logoutUser
       summary: logoutUser
       tags:
-      - Auth
+        - Auth
       x-zuku-availability: implemented
       responses:
         default:
@@ -1427,7 +1433,7 @@ paths:
       operationId: refreshToken
       summary: refreshToken
       tags:
-      - Auth
+        - Auth
       x-zuku-availability: implemented
       responses:
         '200':
@@ -1445,13 +1451,13 @@ paths:
                       tokens:
                         $ref: '#/components/schemas/TokenResponse'
                     required:
-                    - tokens
+                      - tokens
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -1473,7 +1479,7 @@ paths:
       operationId: getCurrentUser
       summary: getCurrentUser
       tags:
-      - Auth
+        - Auth
       x-zuku-availability: implemented
       responses:
         '200':
@@ -1491,13 +1497,13 @@ paths:
                       user:
                         $ref: '#/components/schemas/User'
                     required:
-                    - user
+                      - user
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -1511,7 +1517,7 @@ paths:
       operationId: updateCurrentUser
       summary: updateCurrentUser
       tags:
-      - Auth
+        - Auth
       x-zuku-availability: implemented
       responses:
         '200':
@@ -1529,13 +1535,13 @@ paths:
                       user:
                         $ref: '#/components/schemas/User'
                     required:
-                    - user
+                      - user
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -1566,10 +1572,10 @@ paths:
                 banner_tone:
                   type: string
                   enum:
-                  - cyan
-                  - swipe
-                  - jump
-                  - slate
+                    - cyan
+                    - swipe
+                    - jump
+                    - slate
                 cover_url:
                   type: string
                 avatar_url:
@@ -1583,7 +1589,7 @@ paths:
       operationId: getFeeds
       summary: getFeeds
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -1600,9 +1606,9 @@ paths:
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -1610,53 +1616,53 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: page
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-      - name: per_page
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-          maximum: 50
-      - name: cursor
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: sort
-        in: query
-        required: false
-        schema:
-          type: string
-          enum:
-          - hot
-          - new
-          - top
-          - length
-          - following
-      - name: category
-        in: query
-        required: false
-        schema:
-          type: string
-          enum:
-          - hype
-          - swipe
-          - jump
-          - vive
-          - vine
-      - name: mode
-        in: query
-        required: false
-        schema:
-          type: string
-          enum:
-          - stream
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - hot
+              - new
+              - top
+              - length
+              - following
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - hype
+              - swipe
+              - jump
+              - vive
+              - vine
+        - name: mode
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - stream
       x-zuku-native-credentials-only: false
       x-zuku-retry: safe-read
       security: []
@@ -1665,7 +1671,7 @@ paths:
       operationId: getHypeFeed
       summary: getHypeFeed
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -1682,9 +1688,9 @@ paths:
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -1692,53 +1698,53 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: page
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-      - name: per_page
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-          maximum: 50
-      - name: cursor
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: sort
-        in: query
-        required: false
-        schema:
-          type: string
-          enum:
-          - hot
-          - new
-          - top
-          - length
-          - following
-      - name: category
-        in: query
-        required: false
-        schema:
-          type: string
-          enum:
-          - hype
-          - swipe
-          - jump
-          - vive
-          - vine
-      - name: mode
-        in: query
-        required: false
-        schema:
-          type: string
-          enum:
-          - stream
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - hot
+              - new
+              - top
+              - length
+              - following
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - hype
+              - swipe
+              - jump
+              - vive
+              - vine
+        - name: mode
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - stream
       x-zuku-native-credentials-only: false
       x-zuku-retry: safe-read
       security: []
@@ -1747,7 +1753,7 @@ paths:
       operationId: getSwipeFeed
       summary: getSwipeFeed
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -1764,9 +1770,9 @@ paths:
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -1774,53 +1780,53 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: page
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-      - name: per_page
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-          maximum: 50
-      - name: cursor
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: sort
-        in: query
-        required: false
-        schema:
-          type: string
-          enum:
-          - hot
-          - new
-          - top
-          - length
-          - following
-      - name: category
-        in: query
-        required: false
-        schema:
-          type: string
-          enum:
-          - hype
-          - swipe
-          - jump
-          - vive
-          - vine
-      - name: mode
-        in: query
-        required: false
-        schema:
-          type: string
-          enum:
-          - stream
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - hot
+              - new
+              - top
+              - length
+              - following
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - hype
+              - swipe
+              - jump
+              - vive
+              - vine
+        - name: mode
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - stream
       x-zuku-native-credentials-only: false
       x-zuku-retry: safe-read
       security: []
@@ -1829,7 +1835,7 @@ paths:
       operationId: getJumpFeed
       summary: getJumpFeed
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -1846,9 +1852,9 @@ paths:
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -1856,53 +1862,53 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: page
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-      - name: per_page
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-          maximum: 50
-      - name: cursor
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: sort
-        in: query
-        required: false
-        schema:
-          type: string
-          enum:
-          - hot
-          - new
-          - top
-          - length
-          - following
-      - name: category
-        in: query
-        required: false
-        schema:
-          type: string
-          enum:
-          - hype
-          - swipe
-          - jump
-          - vive
-          - vine
-      - name: mode
-        in: query
-        required: false
-        schema:
-          type: string
-          enum:
-          - stream
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - hot
+              - new
+              - top
+              - length
+              - following
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - hype
+              - swipe
+              - jump
+              - vive
+              - vine
+        - name: mode
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - stream
       x-zuku-native-credentials-only: false
       x-zuku-retry: safe-read
       security: []
@@ -1911,7 +1917,7 @@ paths:
       operationId: getContent
       summary: getContent
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -1929,13 +1935,13 @@ paths:
                       content:
                         $ref: '#/components/schemas/Content'
                     required:
-                    - content
+                      - content
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -1943,12 +1949,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
       x-zuku-native-credentials-only: false
       x-zuku-retry: safe-read
       security: []
@@ -1956,7 +1962,7 @@ paths:
       operationId: deleteContent
       summary: deleteContent
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -1974,13 +1980,13 @@ paths:
                       content:
                         $ref: '#/components/schemas/Content'
                     required:
-                    - content
+                      - content
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -1988,19 +1994,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
     patch:
       operationId: updateContent
       summary: updateContent
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -2018,13 +2024,13 @@ paths:
                       content:
                         $ref: '#/components/schemas/Content'
                     required:
-                    - content
+                      - content
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -2032,12 +2038,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
       requestBody:
         required: true
         content:
@@ -2051,7 +2057,7 @@ paths:
       operationId: createContent
       summary: createContent
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '201':
@@ -2071,13 +2077,13 @@ paths:
                       deployment:
                         $ref: '#/components/schemas/GameDeployment'
                     required:
-                    - content
+                      - content
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -2094,15 +2100,15 @@ paths:
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
       security:
-      - BearerAuth: []
-      - ApiKeyAuth: []
-      - BrowserSession: []
+        - BearerAuth: []
+        - ApiKeyAuth: []
+        - BrowserSession: []
   /contents/{id}/like:
     post:
       operationId: likeContent
       summary: likeContent
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -2122,14 +2128,14 @@ paths:
                       like_count:
                         type: integer
                     required:
-                    - is_liked
-                    - like_count
+                      - is_liked
+                      - like_count
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -2137,12 +2143,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /contents/{id}/bookmark:
@@ -2150,7 +2156,7 @@ paths:
       operationId: bookmarkContent
       summary: bookmarkContent
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -2170,14 +2176,14 @@ paths:
                       bookmark_count:
                         type: integer
                     required:
-                    - is_bookmarked
-                    - bookmark_count
+                      - is_bookmarked
+                      - bookmark_count
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -2185,12 +2191,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /contents/{id}/comments:
@@ -2198,7 +2204,7 @@ paths:
       operationId: getContentComments
       summary: getContentComments
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -2220,14 +2226,14 @@ paths:
                       pagination:
                         $ref: '#/components/schemas/Pagination'
                     required:
-                    - comments
-                    - pagination
+                      - comments
+                      - pagination
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -2235,25 +2241,25 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
-      - name: page
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-      - name: per_page
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-          maximum: 50
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
       x-zuku-native-credentials-only: false
       x-zuku-retry: safe-read
       security: []
@@ -2261,7 +2267,7 @@ paths:
       operationId: createComment
       summary: createComment
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '201':
@@ -2279,13 +2285,13 @@ paths:
                       comment:
                         $ref: '#/components/schemas/Comment'
                     required:
-                    - comment
+                      - comment
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -2293,12 +2299,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
       requestBody:
         required: true
         content:
@@ -2312,7 +2318,7 @@ paths:
       operationId: getJumpGames
       summary: getJumpGames
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -2334,14 +2340,14 @@ paths:
                       pagination:
                         $ref: '#/components/schemas/Pagination'
                     required:
-                    - games
-                    - pagination
+                      - games
+                      - pagination
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -2349,45 +2355,45 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: page
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-      - name: per_page
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-          maximum: 50
-      - name: cursor
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: sort
-        in: query
-        required: false
-        schema:
-          type: string
-          enum:
-          - hot
-          - new
-          - top
-          - length
-          - following
-      - name: source
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: legacy_source
-        in: query
-        required: false
-        schema:
-          type: string
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - hot
+              - new
+              - top
+              - length
+              - following
+        - name: source
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: legacy_source
+          in: query
+          required: false
+          schema:
+            type: string
       x-zuku-native-credentials-only: false
       x-zuku-retry: safe-read
       security: []
@@ -2396,7 +2402,7 @@ paths:
       operationId: getJumpGame
       summary: getJumpGame
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -2422,13 +2428,13 @@ paths:
                         items:
                           $ref: '#/components/schemas/Content'
                     required:
-                    - content
+                      - content
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -2436,17 +2442,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
-      - name: include
-        in: query
-        required: false
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
+        - name: include
+          in: query
+          required: false
+          schema:
+            type: string
       x-zuku-native-credentials-only: false
       x-zuku-retry: safe-read
       security: []
@@ -2455,7 +2461,7 @@ paths:
       operationId: playJumpGame
       summary: playJumpGame
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -2482,18 +2488,18 @@ paths:
                           pids_max:
                             type: integer
                         required:
-                        - boundary
-                        - memory_cap_mb
-                        - pids_max
+                          - boundary
+                          - memory_cap_mb
+                          - pids_max
                     required:
-                    - ok
-                    - sandbox
+                      - ok
+                      - sandbox
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -2501,12 +2507,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
       requestBody:
         required: true
         content:
@@ -2521,7 +2527,7 @@ paths:
       operationId: getCreator
       summary: getCreator
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -2539,13 +2545,13 @@ paths:
                       creator:
                         $ref: '#/components/schemas/Creator'
                     required:
-                    - creator
+                      - creator
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -2553,12 +2559,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: handle
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: handle
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
       x-zuku-native-credentials-only: false
       x-zuku-retry: safe-read
       security: []
@@ -2567,7 +2573,7 @@ paths:
       operationId: getCreatorContents
       summary: getCreatorContents
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -2589,14 +2595,14 @@ paths:
                       pagination:
                         $ref: '#/components/schemas/Pagination'
                     required:
-                    - feeds
-                    - pagination
+                      - feeds
+                      - pagination
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -2604,30 +2610,30 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: handle
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
-      - name: page
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-      - name: per_page
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-          maximum: 50
-      - name: category
-        in: query
-        required: false
-        schema:
-          type: string
+        - name: handle
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
       x-zuku-native-credentials-only: false
       x-zuku-retry: safe-read
       security: []
@@ -2636,7 +2642,7 @@ paths:
       operationId: createReport
       summary: createReport
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '201':
@@ -2654,13 +2660,13 @@ paths:
                       report:
                         $ref: '#/components/schemas/Report'
                     required:
-                    - report
+                      - report
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -2680,7 +2686,7 @@ paths:
       operationId: listReports
       summary: listReports
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -2703,14 +2709,14 @@ paths:
                         type: integer
                         minimum: 0
                     required:
-                    - reports
-                    - total
+                      - reports
+                      - total
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -2718,19 +2724,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: page
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-      - name: per_page
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-          maximum: 100
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /admin/users:
@@ -2738,7 +2744,7 @@ paths:
       operationId: getAdminUsers
       summary: getAdminUsers
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -2762,14 +2768,14 @@ paths:
                       pagination:
                         $ref: '#/components/schemas/Pagination'
                     required:
-                    - users
-                    - pagination
+                      - users
+                      - pagination
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -2777,34 +2783,34 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: page
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-      - name: per_page
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-          maximum: 50
-      - name: q
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: role
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: status
-        in: query
-        required: false
-        schema:
-          type: string
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: role
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /admin/users/{id}:
@@ -2812,7 +2818,7 @@ paths:
       operationId: updateAdminUser
       summary: updateAdminUser
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -2830,13 +2836,13 @@ paths:
                       user:
                         $ref: '#/components/schemas/UserAdmin'
                     required:
-                    - user
+                      - user
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -2844,12 +2850,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
       requestBody:
         required: true
         content:
@@ -2863,7 +2869,7 @@ paths:
       operationId: getViveFeed
       summary: getViveFeed
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -2880,9 +2886,9 @@ paths:
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -2890,35 +2896,35 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: page
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-      - name: per_page
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-          maximum: 50
-      - name: cursor
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: sort
-        in: query
-        required: false
-        schema:
-          type: string
-          enum:
-          - hot
-          - new
-          - top
-          - length
-          - following
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - hot
+              - new
+              - top
+              - length
+              - following
       x-zuku-native-credentials-only: false
       x-zuku-retry: safe-read
       security: []
@@ -2927,7 +2933,7 @@ paths:
       operationId: getVineFeed
       summary: getVineFeed
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -2944,9 +2950,9 @@ paths:
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -2954,35 +2960,35 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: page
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-      - name: per_page
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-          maximum: 50
-      - name: cursor
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: sort
-        in: query
-        required: false
-        schema:
-          type: string
-          enum:
-          - hot
-          - new
-          - top
-          - length
-          - following
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - hot
+              - new
+              - top
+              - length
+              - following
       x-zuku-native-credentials-only: false
       x-zuku-retry: safe-read
       security: []
@@ -2991,7 +2997,7 @@ paths:
       operationId: listSessions
       summary: listSessions
       tags:
-      - Auth
+        - Auth
       x-zuku-availability: implemented
       responses:
         '200':
@@ -3013,13 +3019,13 @@ paths:
                           properties: {}
                           required: []
                     required:
-                    - sessions
+                      - sessions
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -3034,7 +3040,7 @@ paths:
       operationId: revokeSession
       summary: revokeSession
       tags:
-      - Auth
+        - Auth
       x-zuku-availability: implemented
       responses:
         default:
@@ -3046,12 +3052,12 @@ paths:
         '204':
           description: Session revoked; no body
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /auth/session:
@@ -3059,7 +3065,7 @@ paths:
       operationId: activateSession
       summary: activateSession
       tags:
-      - Auth
+        - Auth
       x-zuku-availability: implemented
       responses:
         '200':
@@ -3077,13 +3083,13 @@ paths:
                       user:
                         $ref: '#/components/schemas/User'
                     required:
-                    - user
+                      - user
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -3098,7 +3104,7 @@ paths:
       operationId: publishContent
       summary: publishContent
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -3118,13 +3124,13 @@ paths:
                       deployment:
                         $ref: '#/components/schemas/GameDeployment'
                     required:
-                    - content
+                      - content
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -3132,12 +3138,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
       requestBody:
@@ -3150,16 +3156,17 @@ paths:
                 mode:
                   const: yolo
               required:
-              - mode
+                - mode
               additionalProperties: false
-      description: Account publish accepts an empty body. Scoped Game CLI OAuth requires exactly {"mode":"yolo"}
-        and Idempotency-Key; quota is 3 production deployments per rolling 21600 seconds.
+      description: Account publish accepts an empty body. Scoped
+        Game CLI OAuth requires exactly {"mode":"yolo"} and Idempotency-Key;
+        quota is 3 production deployments per rolling 21600 seconds.
   /contents/{id}/view:
     post:
       operationId: recordContentView
       summary: recordContentView
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -3179,14 +3186,14 @@ paths:
                       counted:
                         type: boolean
                     required:
-                    - view_count
-                    - counted
+                      - view_count
+                      - counted
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -3194,12 +3201,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /comments/{id}:
@@ -3207,7 +3214,7 @@ paths:
       operationId: updateComment
       summary: updateComment
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -3225,13 +3232,13 @@ paths:
                       comment:
                         $ref: '#/components/schemas/Comment'
                     required:
-                    - comment
+                      - comment
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -3239,12 +3246,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
       requestBody:
         required: true
         content:
@@ -3257,14 +3264,14 @@ paths:
                   minLength: 1
                   maxLength: 1000
               required:
-              - body
+                - body
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
     delete:
       operationId: deleteComment
       summary: deleteComment
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '204':
@@ -3276,12 +3283,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /contents/{id}/recommendations:
@@ -3289,7 +3296,7 @@ paths:
       operationId: getContentRecommendations
       summary: getContentRecommendations
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -3311,14 +3318,14 @@ paths:
                         items:
                           $ref: '#/components/schemas/Content'
                     required:
-                    - recommendations
-                    - pagination
+                      - recommendations
+                      - pagination
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -3326,25 +3333,25 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
-      - name: limit
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-          maximum: 50
-      - name: offset
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 0
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
       x-zuku-native-credentials-only: false
       x-zuku-retry: safe-read
       security: []
@@ -3353,7 +3360,7 @@ paths:
       operationId: getGamePackage
       summary: getGamePackage
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -3370,12 +3377,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
       x-zuku-native-credentials-only: false
       x-zuku-retry: safe-read
       security: []
@@ -3384,7 +3391,7 @@ paths:
       operationId: streamJumpGame
       summary: streamJumpGame
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -3401,12 +3408,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
       security: []
@@ -3415,7 +3422,7 @@ paths:
       operationId: getJumpSwf
       summary: getJumpSwf
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -3432,12 +3439,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
       x-zuku-native-credentials-only: false
       x-zuku-retry: safe-read
       security: []
@@ -3446,7 +3453,7 @@ paths:
       operationId: getGamePackageManifest
       summary: getGamePackageManifest
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -3465,9 +3472,9 @@ paths:
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -3475,12 +3482,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
       x-zuku-native-credentials-only: false
       x-zuku-retry: safe-read
       security: []
@@ -3489,7 +3496,7 @@ paths:
       operationId: followCreator
       summary: followCreator
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -3509,14 +3516,14 @@ paths:
                       follower_count:
                         type: integer
                     required:
-                    - is_following
-                    - follower_count
+                      - is_following
+                      - follower_count
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -3524,12 +3531,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: handle
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: handle
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /creators/{handle}/followers:
@@ -3537,7 +3544,7 @@ paths:
       operationId: getCreatorFollowers
       summary: getCreatorFollowers
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -3561,14 +3568,14 @@ paths:
                       pagination:
                         $ref: '#/components/schemas/Pagination'
                     required:
-                    - users
-                    - pagination
+                      - users
+                      - pagination
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -3576,25 +3583,25 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: handle
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
-      - name: page
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-      - name: per_page
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-          maximum: 50
+        - name: handle
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
       x-zuku-native-credentials-only: false
       x-zuku-retry: safe-read
       security: []
@@ -3603,7 +3610,7 @@ paths:
       operationId: getCreatorFollowing
       summary: getCreatorFollowing
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -3627,14 +3634,14 @@ paths:
                       pagination:
                         $ref: '#/components/schemas/Pagination'
                     required:
-                    - users
-                    - pagination
+                      - users
+                      - pagination
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -3642,25 +3649,25 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: handle
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
-      - name: page
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-      - name: per_page
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-          maximum: 50
+        - name: handle
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
       x-zuku-native-credentials-only: false
       x-zuku-retry: safe-read
       security: []
@@ -3669,7 +3676,7 @@ paths:
       operationId: listApiKeys
       summary: listApiKeys
       tags:
-      - Developer
+        - Developer
       x-zuku-availability: implemented
       responses:
         '200':
@@ -3691,13 +3698,13 @@ paths:
                           properties: {}
                           required: []
                     required:
-                    - api_keys
+                      - api_keys
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -3711,7 +3718,7 @@ paths:
       operationId: createApiKey
       summary: createApiKey
       tags:
-      - Developer
+        - Developer
       x-zuku-availability: implemented
       responses:
         '201':
@@ -3733,14 +3740,14 @@ paths:
                       key:
                         type: string
                     required:
-                    - api_key
-                    - key
+                      - api_key
+                      - key
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -3764,7 +3771,7 @@ paths:
                   minimum: 1
                   maximum: 100000
               required:
-              - name
+                - name
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /developer/keys/{id}:
@@ -3772,7 +3779,7 @@ paths:
       operationId: revokeApiKey
       summary: revokeApiKey
       tags:
-      - Developer
+        - Developer
       x-zuku-availability: implemented
       responses:
         '204':
@@ -3784,12 +3791,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /uploads:
@@ -3797,7 +3804,7 @@ paths:
       operationId: uploadMedia
       summary: uploadMedia
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '201':
@@ -3834,20 +3841,20 @@ paths:
                             properties: {}
                             required: []
                         required:
-                        - url
-                        - kind
-                        - mime
-                        - size
-                        - sha256
-                        - original_name
+                          - url
+                          - kind
+                          - mime
+                          - size
+                          - sha256
+                          - original_name
                     required:
-                    - upload
+                      - upload
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -3866,7 +3873,7 @@ paths:
                   type: string
                   format: binary
               required:
-              - file
+                - file
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /oauth/me:
@@ -3874,7 +3881,7 @@ paths:
       operationId: getGameOAuthUser
       summary: getGameOAuthUser
       tags:
-      - Auth
+        - Auth
       x-zuku-availability: implemented
       responses:
         '200':
@@ -3899,9 +3906,9 @@ paths:
                           handle:
                             type: string
                         required:
-                        - id
-                        - display_name
-                        - handle
+                          - id
+                          - display_name
+                          - handle
                       client_id:
                         type: string
                       scopes:
@@ -3911,16 +3918,16 @@ paths:
                       expires_at:
                         type: string
                     required:
-                    - user
-                    - client_id
-                    - scopes
-                    - expires_at
+                      - user
+                      - client_id
+                      - scopes
+                      - expires_at
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -3935,7 +3942,7 @@ paths:
       operationId: getDeployQuota
       summary: getDeployQuota
       tags:
-      - Auth
+        - Auth
       x-zuku-availability: implemented
       responses:
         '200':
@@ -3965,25 +3972,25 @@ paths:
                         minimum: 0
                       reset_at:
                         type:
-                        - string
-                        - 'null'
+                          - string
+                          - 'null'
                       retry_after:
                         type: integer
                         minimum: 0
                     required:
-                    - limit
-                    - window_seconds
-                    - used
-                    - pending
-                    - remaining
-                    - reset_at
-                    - retry_after
+                      - limit
+                      - window_seconds
+                      - used
+                      - pending
+                      - remaining
+                      - reset_at
+                      - retry_after
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -3998,7 +4005,7 @@ paths:
       operationId: getGameDeployment
       summary: getGameDeployment
       tags:
-      - Auth
+        - Auth
       x-zuku-availability: implemented
       responses:
         '200':
@@ -4018,13 +4025,13 @@ paths:
                       content:
                         $ref: '#/components/schemas/Content'
                     required:
-                    - deployment
+                      - deployment
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -4032,14 +4039,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: key
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 8
-          maxLength: 128
-          pattern: ^[A-Za-z0-9_.:-]+$
+        - name: key
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 8
+            maxLength: 128
+            pattern: ^[A-Za-z0-9_.:-]+$
       x-zuku-native-credentials-only: true
       x-zuku-retry: safe-read
   /cloud/projects:
@@ -4047,7 +4054,7 @@ paths:
       operationId: listCloudProjects
       summary: listCloudProjects
       tags:
-      - Game Cloud
+        - Game Cloud
       x-zuku-availability: implemented
       responses:
         '200':
@@ -4067,13 +4074,13 @@ paths:
                         items:
                           $ref: '#/components/schemas/CloudProject'
                     required:
-                    - projects
+                      - projects
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -4087,7 +4094,7 @@ paths:
       operationId: createCloudProject
       summary: createCloudProject
       tags:
-      - Game Cloud
+        - Game Cloud
       x-zuku-availability: implemented
       responses:
         '201':
@@ -4105,13 +4112,13 @@ paths:
                       project_id:
                         type: string
                     required:
-                    - project_id
+                      - project_id
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -4135,7 +4142,7 @@ paths:
                 jump_content_id:
                   type: string
               required:
-              - name
+                - name
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /cloud/economy/balance:
@@ -4143,7 +4150,7 @@ paths:
       operationId: getCloudBalance
       summary: getCloudBalance
       tags:
-      - Game Cloud
+        - Game Cloud
       x-zuku-availability: implemented
       responses:
         '200':
@@ -4163,14 +4170,14 @@ paths:
                       CASH_KRW:
                         type: integer
                     required:
-                    - POINT
-                    - CASH_KRW
+                      - POINT
+                      - CASH_KRW
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -4178,12 +4185,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: projectId
-        in: query
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: projectId
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 1
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /cloud/vars/get:
@@ -4191,7 +4198,7 @@ paths:
       operationId: getCloudVariable
       summary: getCloudVariable
       tags:
-      - Game Cloud
+        - Game Cloud
       x-zuku-availability: implemented
       responses:
         '200':
@@ -4208,9 +4215,9 @@ paths:
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -4231,15 +4238,15 @@ paths:
                 scope:
                   type: string
                   enum:
-                  - global
-                  - user
+                    - global
+                    - user
                 key:
                   type: string
                   minLength: 1
               required:
-              - projectId
-              - scope
-              - key
+                - projectId
+                - scope
+                - key
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /cloud/vars/mutate:
@@ -4247,7 +4254,7 @@ paths:
       operationId: mutateCloudVariable
       summary: mutateCloudVariable
       tags:
-      - Game Cloud
+        - Game Cloud
       x-zuku-availability: implemented
       responses:
         '200':
@@ -4272,23 +4279,23 @@ paths:
                         type: string
                       valueNum:
                         type:
-                        - integer
-                        - 'null'
+                          - integer
+                          - 'null'
                       valueText:
                         type:
-                        - string
-                        - 'null'
+                          - string
+                          - 'null'
                       version:
                         type: integer
                     required:
-                    - ok
-                    - conflict
+                      - ok
+                      - conflict
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -4309,20 +4316,20 @@ paths:
                 scope:
                   type: string
                   enum:
-                  - global
-                  - user
+                    - global
+                    - user
                 key:
                   type: string
                   minLength: 1
                 op:
                   type: string
                   enum:
-                  - set
-                  - incr
-                  - decr
-                  - max
-                  - min
-                  - cas
+                    - set
+                    - incr
+                    - decr
+                    - max
+                    - min
+                    - cas
                 num:
                   type: integer
                 text:
@@ -4332,9 +4339,9 @@ paths:
                 expectedText:
                   type: string
               required:
-              - projectId
-              - scope
-              - key
+                - projectId
+                - scope
+                - key
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /cloud/saves/save:
@@ -4342,7 +4349,7 @@ paths:
       operationId: saveCloudSlot
       summary: saveCloudSlot
       tags:
-      - Game Cloud
+        - Game Cloud
       x-zuku-availability: implemented
       responses:
         '200':
@@ -4359,9 +4366,9 @@ paths:
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -4385,7 +4392,7 @@ paths:
                 data:
                   $ref: '#/components/schemas/JsonValue'
               required:
-              - projectId
+                - projectId
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /cloud/saves/load:
@@ -4393,7 +4400,7 @@ paths:
       operationId: loadCloudSlot
       summary: loadCloudSlot
       tags:
-      - Game Cloud
+        - Game Cloud
       x-zuku-availability: implemented
       responses:
         '200':
@@ -4410,9 +4417,9 @@ paths:
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -4434,7 +4441,7 @@ paths:
                   type: string
                   minLength: 1
               required:
-              - projectId
+                - projectId
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /cloud/saves/list:
@@ -4442,7 +4449,7 @@ paths:
       operationId: listCloudSlots
       summary: listCloudSlots
       tags:
-      - Game Cloud
+        - Game Cloud
       x-zuku-availability: implemented
       responses:
         '200':
@@ -4462,13 +4469,13 @@ paths:
                         items:
                           $ref: '#/components/schemas/CloudSave'
                     required:
-                    - slots
+                      - slots
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -4476,12 +4483,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: projectId
-        in: query
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: projectId
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 1
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /cloud/pay/products:
@@ -4489,7 +4496,7 @@ paths:
       operationId: listCloudProducts
       summary: listCloudProducts
       tags:
-      - Game Cloud
+        - Game Cloud
       x-zuku-availability: implemented
       responses:
         '200':
@@ -4509,13 +4516,13 @@ paths:
                         items:
                           $ref: '#/components/schemas/CloudProduct'
                     required:
-                    - products
+                      - products
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -4523,19 +4530,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: projectId
-        in: query
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: projectId
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 1
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
     post:
       operationId: upsertCloudProduct
       summary: upsertCloudProduct
       tags:
-      - Game Cloud
+        - Game Cloud
       x-zuku-availability: implemented
       responses:
         '200':
@@ -4552,9 +4559,9 @@ paths:
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -4589,24 +4596,24 @@ paths:
                 kind:
                   type: string
                   enum:
-                  - consumable
-                  - non_consumable
-                  - subscription
+                    - consumable
+                    - non_consumable
+                    - subscription
                 status:
                   type: string
                   enum:
-                  - draft
-                  - live
-                  - archived
+                    - draft
+                    - live
+                    - archived
                 fulfillment:
                   type: object
                   properties: {}
                   required: []
               required:
-              - projectId
-              - sku
-              - name
-              - priceKrw
+                - projectId
+                - sku
+                - name
+                - priceKrw
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /cloud/pay/session:
@@ -4614,7 +4621,7 @@ paths:
       operationId: createCloudPaymentSession
       summary: createCloudPaymentSession
       tags:
-      - Game Cloud
+        - Game Cloud
       x-zuku-availability: implemented
       responses:
         '201':
@@ -4645,22 +4652,22 @@ paths:
                         type: string
                       idempotencyKey:
                         type:
-                        - string
-                        - 'null'
+                          - string
+                          - 'null'
                     required:
-                    - id
-                    - projectId
-                    - productId
-                    - amountKrw
-                    - grantPoints
-                    - status
-                    - expiresAt
+                      - id
+                      - projectId
+                      - productId
+                      - amountKrw
+                      - grantPoints
+                      - status
+                      - expiresAt
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -4695,22 +4702,22 @@ paths:
                         type: string
                       idempotencyKey:
                         type:
-                        - string
-                        - 'null'
+                          - string
+                          - 'null'
                     required:
-                    - id
-                    - projectId
-                    - productId
-                    - amountKrw
-                    - grantPoints
-                    - status
-                    - expiresAt
+                      - id
+                      - projectId
+                      - productId
+                      - amountKrw
+                      - grantPoints
+                      - status
+                      - expiresAt
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
       parameters: []
       requestBody:
         required: true
@@ -4731,8 +4738,8 @@ paths:
                   maxLength: 80
                   pattern: ^[A-Za-z0-9_.-]+$
               required:
-              - projectId
-              - productId
+                - projectId
+                - productId
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /cloud/pay/confirm:
@@ -4740,7 +4747,7 @@ paths:
       operationId: confirmCloudPayment
       summary: confirmCloudPayment
       tags:
-      - Game Cloud
+        - Game Cloud
       x-zuku-availability: implemented
       responses:
         '200':
@@ -4769,22 +4776,22 @@ paths:
                         const: false
                       fulfillmentId:
                         type:
-                        - string
-                        - 'null'
+                          - string
+                          - 'null'
                       fulfillment:
                         $ref: '#/components/schemas/JsonValue'
                     required:
-                    - sessionId
-                    - status
-                    - productId
-                    - amountKrw
-                    - pointsGranted
+                      - sessionId
+                      - status
+                      - productId
+                      - amountKrw
+                      - pointsGranted
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -4803,7 +4810,7 @@ paths:
                   type: string
                   minLength: 1
               required:
-              - sessionId
+                - sessionId
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /cloud/pay/entitlements:
@@ -4811,7 +4818,7 @@ paths:
       operationId: listCloudEntitlements
       summary: listCloudEntitlements
       tags:
-      - Game Cloud
+        - Game Cloud
       x-zuku-availability: implemented
       responses:
         '200':
@@ -4833,13 +4840,13 @@ paths:
                           properties: {}
                           required: []
                     required:
-                    - entitlements
+                      - entitlements
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -4847,12 +4854,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: projectId
-        in: query
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: projectId
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 1
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /cloud/functions:
@@ -4860,7 +4867,7 @@ paths:
       operationId: listCloudFunctions
       summary: listCloudFunctions
       tags:
-      - Game Cloud
+        - Game Cloud
       x-zuku-availability: implemented
       responses:
         '200':
@@ -4880,13 +4887,13 @@ paths:
                         items:
                           $ref: '#/components/schemas/CloudFunction'
                     required:
-                    - functions
+                      - functions
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -4894,19 +4901,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: projectId
-        in: query
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: projectId
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 1
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
     post:
       operationId: upsertCloudFunction
       summary: upsertCloudFunction
       tags:
-      - Game Cloud
+        - Game Cloud
       x-zuku-availability: implemented
       responses:
         '200':
@@ -4930,16 +4937,16 @@ paths:
                       status:
                         type: string
                     required:
-                    - id
-                    - name
-                    - version
-                    - status
+                      - id
+                      - name
+                      - version
+                      - status
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -4965,9 +4972,9 @@ paths:
                 sourceCode:
                   type: string
               required:
-              - projectId
-              - name
-              - sourceCode
+                - projectId
+                - name
+                - sourceCode
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /cloud/functions/{id}/publish:
@@ -4975,7 +4982,7 @@ paths:
       operationId: publishCloudFunction
       summary: publishCloudFunction
       tags:
-      - Game Cloud
+        - Game Cloud
       x-zuku-availability: implemented
       responses:
         '200':
@@ -4999,16 +5006,16 @@ paths:
                       scanScore:
                         type: integer
                     required:
-                    - id
-                    - version
-                    - status
-                    - scanScore
+                      - id
+                      - version
+                      - status
+                      - scanScore
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -5016,12 +5023,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
       requestBody:
         required: true
         content:
@@ -5033,7 +5040,7 @@ paths:
                   type: string
                   minLength: 1
               required:
-              - projectId
+                - projectId
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /cloud/functions/{id}/invoke:
@@ -5041,7 +5048,7 @@ paths:
       operationId: invokeCloudFunction
       summary: invokeCloudFunction
       tags:
-      - Game Cloud
+        - Game Cloud
       x-zuku-availability: implemented
       responses:
         '200':
@@ -5063,14 +5070,14 @@ paths:
                         properties: {}
                         required: []
                     required:
-                    - result
-                    - usage
+                      - result
+                      - usage
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -5078,12 +5085,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
       requestBody:
         required: true
         content:
@@ -5104,7 +5111,7 @@ paths:
       operationId: getCloudDashboard
       summary: getCloudDashboard
       tags:
-      - Game Cloud
+        - Game Cloud
       x-zuku-availability: implemented
       responses:
         '200':
@@ -5123,9 +5130,9 @@ paths:
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -5133,12 +5140,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: projectId
-        in: query
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: projectId
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 1
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /cloud/billing/catalog:
@@ -5146,7 +5153,7 @@ paths:
       operationId: getCloudBillingCatalog
       summary: getCloudBillingCatalog
       tags:
-      - Game Cloud
+        - Game Cloud
       x-zuku-availability: implemented
       responses:
         '200':
@@ -5165,9 +5172,9 @@ paths:
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -5182,7 +5189,7 @@ paths:
       operationId: getCloudBillingAccount
       summary: getCloudBillingAccount
       tags:
-      - Game Cloud
+        - Game Cloud
       x-zuku-availability: implemented
       responses:
         '200':
@@ -5201,9 +5208,9 @@ paths:
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -5211,12 +5218,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: projectId
-        in: query
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: projectId
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 1
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /cloud/vm:
@@ -5224,7 +5231,7 @@ paths:
       operationId: getCloudVm
       summary: getCloudVm
       tags:
-      - Game Cloud
+        - Game Cloud
       x-zuku-availability: implemented
       responses:
         '200':
@@ -5243,9 +5250,9 @@ paths:
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -5253,19 +5260,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
-      - name: projectId
-        in: query
-        required: true
-        schema:
-          type: string
-          minLength: 1
+        - name: projectId
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 1
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
     post:
       operationId: createCloudVm
       summary: createCloudVm
       tags:
-      - Game Cloud
+        - Game Cloud
       x-zuku-availability: implemented
       responses:
         default:
@@ -5290,9 +5297,9 @@ paths:
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
       parameters: []
       requestBody:
         required: true
@@ -5307,7 +5314,7 @@ paths:
                 idempotencyKey:
                   type: string
               required:
-              - projectId
+                - projectId
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /cloud/billing/limit:
@@ -5315,7 +5322,7 @@ paths:
       operationId: setCloudSpendLimit
       summary: setCloudSpendLimit
       tags:
-      - Game Cloud
+        - Game Cloud
       x-zuku-availability: implemented
       responses:
         '200':
@@ -5334,9 +5341,9 @@ paths:
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -5359,8 +5366,8 @@ paths:
                   minimum: 0
                   maximum: 10000000
               required:
-              - projectId
-              - spendLimitKrw
+                - projectId
+                - spendLimitKrw
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /cloud/vm/start:
@@ -5368,7 +5375,7 @@ paths:
       operationId: startCloudVm
       summary: startCloudVm
       tags:
-      - Game Cloud
+        - Game Cloud
       x-zuku-availability: implemented
       responses:
         '200':
@@ -5387,9 +5394,9 @@ paths:
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -5410,7 +5417,7 @@ paths:
                 idempotencyKey:
                   type: string
               required:
-              - projectId
+                - projectId
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /cloud/vm/stop:
@@ -5418,7 +5425,7 @@ paths:
       operationId: stopCloudVm
       summary: stopCloudVm
       tags:
-      - Game Cloud
+        - Game Cloud
       x-zuku-availability: implemented
       responses:
         '200':
@@ -5437,9 +5444,9 @@ paths:
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -5460,7 +5467,7 @@ paths:
                 idempotencyKey:
                   type: string
               required:
-              - projectId
+                - projectId
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /cloud/vm/delete:
@@ -5468,7 +5475,7 @@ paths:
       operationId: deleteCloudVm
       summary: deleteCloudVm
       tags:
-      - Game Cloud
+        - Game Cloud
       x-zuku-availability: implemented
       responses:
         '200':
@@ -5487,9 +5494,9 @@ paths:
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -5510,7 +5517,7 @@ paths:
                 idempotencyKey:
                   type: string
               required:
-              - projectId
+                - projectId
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
   /auth/totp/verify:
@@ -5518,7 +5525,7 @@ paths:
       operationId: verifyTotpLogin
       summary: verifyTotpLogin
       tags:
-      - Auth
+        - Auth
       x-zuku-availability: implemented
       responses:
         '200':
@@ -5538,14 +5545,14 @@ paths:
                       tokens:
                         $ref: '#/components/schemas/TokenResponse'
                     required:
-                    - user
-                    - tokens
+                      - user
+                      - tokens
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -5565,8 +5572,8 @@ paths:
                 code:
                   type: string
               required:
-              - challenge_token
-              - code
+                - challenge_token
+                - code
       security: []
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
@@ -5575,7 +5582,7 @@ paths:
       operationId: createCaptchaChallenge
       summary: createCaptchaChallenge
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -5601,17 +5608,17 @@ paths:
                       maxnumber:
                         type: integer
                     required:
-                    - algorithm
-                    - challenge
-                    - salt
-                    - signature
-                    - maxnumber
+                      - algorithm
+                      - challenge
+                      - salt
+                      - signature
+                      - maxnumber
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -5627,7 +5634,7 @@ paths:
       operationId: verifyCaptchaToken
       summary: verifyCaptchaToken
       tags:
-      - Contents
+        - Contents
       x-zuku-availability: implemented
       responses:
         '200':
@@ -5645,13 +5652,13 @@ paths:
                       success:
                         type: boolean
                     required:
-                    - success
+                      - success
                   meta:
                     $ref: '#/components/schemas/ApiMeta'
                 required:
-                - success
-                - data
-                - meta
+                  - success
+                  - data
+                  - meta
         default:
           description: API error
           content:
@@ -5671,17 +5678,17 @@ paths:
                 dev_host:
                   type: string
               required:
-              - token
+                - token
       x-zuku-native-credentials-only: false
       x-zuku-retry: never
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
   /oauth/device/authorization:
     post:
       operationId: createGameDeviceAuthorization
       summary: createGameDeviceAuthorization
       tags:
-      - Auth
+        - Auth
       x-zuku-availability: implemented
       responses:
         '200':
@@ -5704,12 +5711,12 @@ paths:
                   interval:
                     type: integer
                 required:
-                - device_code
-                - user_code
-                - verification_uri
-                - verification_uri_complete
-                - expires_in
-                - interval
+                  - device_code
+                  - user_code
+                  - verification_uri
+                  - verification_uri_complete
+                  - expires_in
+                  - interval
         default:
           description: API error
           content:
@@ -5720,7 +5727,7 @@ paths:
                   error:
                     type: string
                 required:
-                - error
+                  - error
       parameters: []
       requestBody:
         required: true
@@ -5735,8 +5742,8 @@ paths:
                   type: string
                   minLength: 1
               required:
-              - client_id
-              - scope
+                - client_id
+                - scope
       security: []
       x-zuku-native-credentials-only: true
       x-zuku-suppress-auth: true
@@ -5746,7 +5753,7 @@ paths:
       operationId: exchangeGameOAuthToken
       summary: exchangeGameOAuthToken
       tags:
-      - Auth
+        - Auth
       x-zuku-availability: implemented
       responses:
         '200':
@@ -5767,11 +5774,11 @@ paths:
                   scope:
                     type: string
                 required:
-                - access_token
-                - refresh_token
-                - token_type
-                - expires_in
-                - scope
+                  - access_token
+                  - refresh_token
+                  - token_type
+                  - expires_in
+                  - scope
         default:
           description: API error
           content:
@@ -5782,7 +5789,7 @@ paths:
                   error:
                     type: string
                 required:
-                - error
+                  - error
       parameters: []
       requestBody:
         required: true
@@ -5796,26 +5803,26 @@ paths:
                 grant_type:
                   type: string
                   enum:
-                  - urn:ietf:params:oauth:grant-type:device_code
-                  - refresh_token
+                    - urn:ietf:params:oauth:grant-type:device_code
+                    - refresh_token
                 device_code:
                   type: string
                 refresh_token:
                   type: string
               required:
-              - client_id
-              - grant_type
+                - client_id
+                - grant_type
               anyOf:
-              - properties:
-                  grant_type:
-                    const: urn:ietf:params:oauth:grant-type:device_code
-                required:
-                - device_code
-              - properties:
-                  grant_type:
-                    const: refresh_token
-                required:
-                - refresh_token
+                - properties:
+                    grant_type:
+                      const: urn:ietf:params:oauth:grant-type:device_code
+                  required:
+                    - device_code
+                - properties:
+                    grant_type:
+                      const: refresh_token
+                  required:
+                    - refresh_token
       security: []
       x-zuku-native-credentials-only: true
       x-zuku-suppress-auth: true
@@ -5825,7 +5832,7 @@ paths:
       operationId: revokeGameOAuthToken
       summary: revokeGameOAuthToken
       tags:
-      - Auth
+        - Auth
       x-zuku-availability: implemented
       responses:
         '200':
@@ -5846,7 +5853,7 @@ paths:
                   error:
                     type: string
                 required:
-                - error
+                  - error
       parameters: []
       requestBody:
         required: true
@@ -5860,711 +5867,732 @@ paths:
                 token:
                   type: string
               required:
-              - client_id
-              - token
+                - client_id
+                - token
       security: []
       x-zuku-native-credentials-only: true
       x-zuku-suppress-auth: true
       x-zuku-retry: never
 x-zuku-legacy-operations:
-- operationId: oauthRedirect
-  method: GET
-  path: /auth/oauth/{provider}
-  reason: No matching implemented server route.
-  operation:
-    operationId: oauthRedirect
-    tags:
-    - Auth
-    summary: OAuth 로그인 리다이렉트
-    description: 지정된 OAuth 프로바이더로 리다이렉트합니다. Legacy documented operation without a matching implemented server route;
-      the SDK rejects it explicitly instead of issuing a misleading request.
-    security: []
-    parameters:
-    - name: provider
-      in: path
-      required: true
-      schema:
-        $ref: '#/components/schemas/OAuthProvider'
-    responses:
-      '302':
-        description: OAuth 프로바이더로 리다이렉트
-        headers:
-          Location:
-            schema:
-              type: string
-              format: uri
-      '400':
-        $ref: '#/components/responses/BadRequest'
-      default:
-        description: API error
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorResponse'
-    x-zuku-availability: unavailable
-- operationId: unlikeContent
-  method: DELETE
-  path: /contents/{id}/like
-  reason: No matching implemented server route.
-  operation:
-    operationId: unlikeContent
-    tags:
-    - Contents
-    summary: 콘텐츠 좋아요 취소
-    description: 콘텐츠의 좋아요를 취소합니다. Legacy documented operation without a matching implemented server route; the SDK
-      rejects it explicitly instead of issuing a misleading request.
-    parameters:
-    - name: id
-      in: path
-      required: true
-      schema:
-        type: string
-    responses:
-      '200':
-        description: Successful response
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                success:
-                  const: true
-                data:
-                  type: object
-                  properties: {}
-                  required: []
-                meta:
-                  $ref: '#/components/schemas/ApiMeta'
-              required:
-              - success
-              - data
-              - meta
-      '404':
-        $ref: '#/components/responses/NotFound'
-      default:
-        description: API error
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorResponse'
-    x-zuku-availability: unavailable
-- operationId: getHypeContent
-  method: GET
-  path: /hype/{id}
-  reason: Hype uses the unified content detail route.
-  operation:
-    operationId: getHypeContent
-    tags:
-    - Hype
-    summary: Hype 콘텐츠 상세 조회
-    description: Hype 콘텐츠의 상세 정보와 인기도 점수를 반환합니다. Legacy documented operation without a matching implemented server
-      route; the SDK rejects it explicitly instead of issuing a misleading request.
-    parameters:
-    - name: id
-      in: path
-      required: true
-      schema:
-        type: string
-    responses:
-      '200':
-        description: Hype 콘텐츠 조회 성공
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                success:
-                  const: true
-                data:
-                  $ref: '#/components/schemas/HypeContent'
-                meta:
-                  $ref: '#/components/schemas/ApiMeta'
-              required:
-              - success
-              - data
-              - meta
-      '404':
-        $ref: '#/components/responses/NotFound'
-      default:
-        description: API error
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorResponse'
-    x-zuku-availability: unavailable
-  aliasOf: getContent
-- operationId: interactHypeContent
-  method: POST
-  path: /hype/{id}/interact
-  reason: No matching implemented server route.
-  operation:
-    operationId: interactHypeContent
-    tags:
-    - Hype
-    summary: Hype 콘텐츠 인터랙션
-    description: Hype 콘텐츠에 인터랙션(좋아요, 슈퍼좋아요, 공유)을 수행합니다. Legacy documented operation without a matching implemented
-      server route; the SDK rejects it explicitly instead of issuing a misleading request.
-    parameters:
-    - name: id
-      in: path
-      required: true
-      schema:
-        type: string
-    requestBody:
-      required: true
-      content:
-        application/json:
+  - operationId: oauthRedirect
+    method: GET
+    path: /auth/oauth/{provider}
+    reason: No matching implemented server route.
+    operation:
+      operationId: oauthRedirect
+      tags:
+        - Auth
+      summary: OAuth 로그인 리다이렉트
+      description: 지정된 OAuth 프로바이더로 리다이렉트합니다. Legacy documented
+        operation without a matching implemented server route;
+        the SDK rejects it explicitly instead of issuing a misleading
+        request.
+      security: []
+      parameters:
+        - name: provider
+          in: path
+          required: true
           schema:
-            $ref: '#/components/schemas/HypeInteractRequest'
-    responses:
-      '200':
-        description: Successful response
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                success:
-                  const: true
-                data:
-                  type: object
-                  properties: {}
-                  required: []
-                meta:
-                  $ref: '#/components/schemas/ApiMeta'
-              required:
-              - success
-              - data
-              - meta
-      '400':
-        $ref: '#/components/responses/BadRequest'
-      '404':
-        $ref: '#/components/responses/NotFound'
-      default:
-        description: API error
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorResponse'
-    x-zuku-availability: unavailable
-- operationId: getSwipeFeedAlt
-  method: GET
-  path: /swipe/feed
-  reason: Swipe uses the canonical feed with mode=stream.
-  operation:
-    operationId: getSwipeFeedAlt
-    tags:
-    - Swipe
-    summary: Swipe 피드 조회 (대체 경로)
-    description: Swipe 숏폼 콘텐츠 피드를 반환합니다. Legacy documented operation without a matching implemented server route;
-      the SDK rejects it explicitly instead of issuing a misleading request.
-    parameters:
-    - name: cursor
-      in: query
-      schema:
-        type: string
-      description: 무한 스크롤용 커서
-    - $ref: '#/components/parameters/LimitParam'
-    responses:
-      '200':
-        description: Swipe 피드 조회 성공
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                success:
-                  const: true
-                data:
-                  type: object
-                  properties:
-                    data:
-                      type: array
-                      items:
-                        $ref: '#/components/schemas/SwipeContent'
-                    next_cursor:
-                      type:
-                      - string
-                      - 'null'
-                      example: eyJpZCI6ImNudF8wMUg4WDlZMlozQTRCNUM2RCIifQ==
-                meta:
-                  $ref: '#/components/schemas/ApiMeta'
-              required:
-              - success
-              - data
-              - meta
-      default:
-        description: API error
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorResponse'
-    x-zuku-availability: unavailable
-  aliasOf: getSwipeFeed
-  queryDefaults:
-    mode: stream
-- operationId: recordSwipeWatch
-  method: POST
-  path: /swipe/{id}/watch
-  reason: No matching implemented server route.
-  operation:
-    operationId: recordSwipeWatch
-    tags:
-    - Swipe
-    summary: Swipe 시청 기록
-    description: Swipe 콘텐츠 시청 기록을 저장합니다. Legacy documented operation without a matching implemented server route;
-      the SDK rejects it explicitly instead of issuing a misleading request.
-    parameters:
-    - name: id
-      in: path
-      required: true
-      schema:
-        type: string
-    requestBody:
-      required: true
-      content:
-        application/json:
+            $ref: '#/components/schemas/OAuthProvider'
+      responses:
+        '302':
+          description: OAuth 프로바이더로 리다이렉트
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-zuku-availability: unavailable
+  - operationId: unlikeContent
+    method: DELETE
+    path: /contents/{id}/like
+    reason: No matching implemented server route.
+    operation:
+      operationId: unlikeContent
+      tags:
+        - Contents
+      summary: 콘텐츠 좋아요 취소
+      description: 콘텐츠의 좋아요를 취소합니다. Legacy documented operation
+        without a matching implemented server route; the SDK rejects
+        it explicitly instead of issuing a misleading request.
+      parameters:
+        - name: id
+          in: path
+          required: true
           schema:
-            $ref: '#/components/schemas/SwipeWatchRequest'
-    responses:
-      '200':
-        description: Successful response
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                success:
-                  const: true
-                data:
-                  type: object
-                  properties: {}
-                  required: []
-                meta:
-                  $ref: '#/components/schemas/ApiMeta'
-              required:
-              - success
-              - data
-              - meta
-      '404':
-        $ref: '#/components/responses/NotFound'
-      default:
-        description: API error
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorResponse'
-    x-zuku-availability: unavailable
-- operationId: createGameReview
-  method: POST
-  path: /jump/games/{id}/review
-  reason: No matching implemented server route.
-  operation:
-    operationId: createGameReview
-    tags:
-    - Jump
-    summary: 게임 리뷰 작성
-    description: 게임에 대한 리뷰를 작성합니다. Legacy documented operation without a matching implemented server route; the
-      SDK rejects it explicitly instead of issuing a misleading request.
-    parameters:
-    - name: id
-      in: path
-      required: true
-      schema:
-        type: string
-    requestBody:
-      required: true
-      content:
-        application/json:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    const: true
+                  data:
+                    type: object
+                    properties: {}
+                    required: []
+                  meta:
+                    $ref: '#/components/schemas/ApiMeta'
+                required:
+                  - success
+                  - data
+                  - meta
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-zuku-availability: unavailable
+  - operationId: getHypeContent
+    method: GET
+    path: /hype/{id}
+    reason: Hype uses the unified content detail route.
+    operation:
+      operationId: getHypeContent
+      tags:
+        - Hype
+      summary: Hype 콘텐츠 상세 조회
+      description: Hype 콘텐츠의 상세 정보와 인기도 점수를 반환합니다. Legacy documented
+        operation without a matching implemented server route;
+        the SDK rejects it explicitly instead of issuing a misleading
+        request.
+      parameters:
+        - name: id
+          in: path
+          required: true
           schema:
-            $ref: '#/components/schemas/CreateReviewRequest'
-    responses:
-      '201':
-        description: 리뷰 작성 성공
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                success:
-                  const: true
-                data:
-                  $ref: '#/components/schemas/GameReview'
-                meta:
-                  $ref: '#/components/schemas/ApiMeta'
-              required:
-              - success
-              - data
-              - meta
-      '400':
-        $ref: '#/components/responses/BadRequest'
-      '404':
-        $ref: '#/components/responses/NotFound'
-      default:
-        description: API error
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorResponse'
-    x-zuku-availability: unavailable
-- operationId: getGameLeaderboard
-  method: GET
-  path: /jump/games/{id}/leaderboard
-  reason: No matching implemented server route.
-  operation:
-    operationId: getGameLeaderboard
-    tags:
-    - Jump
-    summary: 게임 리더보드
-    description: 게임의 리더보드를 반환합니다. Legacy documented operation without a matching implemented server route; the SDK
-      rejects it explicitly instead of issuing a misleading request.
-    parameters:
-    - name: id
-      in: path
-      required: true
-      schema:
-        type: string
-    - $ref: '#/components/parameters/LimitParam'
-    - name: period
-      in: query
-      schema:
-        type: string
-        enum:
-        - daily
-        - weekly
-        - all_time
-        default: all_time
-      description: 기간 필터
-    responses:
-      '200':
-        description: 리더보드 조회 성공
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                success:
-                  const: true
-                data:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/LeaderboardEntry'
-                meta:
-                  $ref: '#/components/schemas/ApiMeta'
-              required:
-              - success
-              - data
-              - meta
-      '404':
-        $ref: '#/components/responses/NotFound'
-      default:
-        description: API error
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorResponse'
-    x-zuku-availability: unavailable
-- operationId: unfollowCreator
-  method: DELETE
-  path: /creators/{id}/follow
-  reason: No matching implemented server route.
-  operation:
-    operationId: unfollowCreator
-    tags:
-    - Creators
-    summary: 크리에이터 언팔로우
-    description: 크리에이터를 언팔로우합니다. Legacy documented operation without a matching implemented server route; the SDK
-      rejects it explicitly instead of issuing a misleading request.
-    parameters:
-    - name: id
-      in: path
-      required: true
-      schema:
-        type: string
-    responses:
-      '200':
-        description: Successful response
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                success:
-                  const: true
-                data:
-                  type: object
-                  properties: {}
-                  required: []
-                meta:
-                  $ref: '#/components/schemas/ApiMeta'
-              required:
-              - success
-              - data
-              - meta
-      '404':
-        $ref: '#/components/responses/NotFound'
-      default:
-        description: API error
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorResponse'
-    x-zuku-availability: unavailable
-- operationId: getCreatorAnalytics
-  method: GET
-  path: /creators/{id}/analytics
-  reason: No matching implemented server route.
-  operation:
-    operationId: getCreatorAnalytics
-    tags:
-    - Creators
-    summary: 크리에이터 분석 데이터
-    description: 크리에이터의 분석 데이터를 반환합니다. 본인의 데이터만 조회 가능합니다. Legacy documented operation without a matching implemented
-      server route; the SDK rejects it explicitly instead of issuing a misleading request.
-    parameters:
-    - name: id
-      in: path
-      required: true
-      schema:
-        type: string
-    - name: period
-      in: query
-      schema:
-        type: string
-        enum:
-        - 7d
-        - 30d
-        - 90d
-        default: 30d
-      description: 분석 기간
-    responses:
-      '200':
-        description: 분석 데이터 조회 성공
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                success:
-                  const: true
-                data:
-                  $ref: '#/components/schemas/CreatorAnalytics'
-                meta:
-                  $ref: '#/components/schemas/ApiMeta'
-              required:
-              - success
-              - data
-              - meta
-      '403':
-        $ref: '#/components/responses/Forbidden'
-      default:
-        description: API error
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorResponse'
-    x-zuku-availability: unavailable
-- operationId: getReport
-  method: GET
-  path: /reports/{id}
-  reason: No matching implemented server route.
-  operation:
-    operationId: getReport
-    tags:
-    - Moderation
-    summary: 신고 상세 조회
-    description: 신고의 상세 정보를 반환합니다. 관리자만 조회 가능합니다. Legacy documented operation without a matching implemented server
-      route; the SDK rejects it explicitly instead of issuing a misleading request.
-    parameters:
-    - name: id
-      in: path
-      required: true
-      schema:
-        type: string
-    responses:
-      '200':
-        description: 신고 조회 성공
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                success:
-                  const: true
-                data:
-                  $ref: '#/components/schemas/Report'
-                meta:
-                  $ref: '#/components/schemas/ApiMeta'
-              required:
-              - success
-              - data
-              - meta
-      '403':
-        $ref: '#/components/responses/Forbidden'
-      '404':
-        $ref: '#/components/responses/NotFound'
-      default:
-        description: API error
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorResponse'
-    x-zuku-availability: unavailable
-- operationId: getAdminDashboard
-  method: GET
-  path: /admin/dashboard
-  reason: No matching implemented server route.
-  operation:
-    operationId: getAdminDashboard
-    tags:
-    - Admin
-    summary: 관리자 대시보드
-    description: 관리자 대시보드 통계를 반환합니다. 관리자 권한이 필요합니다. Legacy documented operation without a matching implemented server
-      route; the SDK rejects it explicitly instead of issuing a misleading request.
-    responses:
-      '200':
-        description: 대시보드 조회 성공
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                success:
-                  const: true
-                data:
-                  $ref: '#/components/schemas/AdminDashboard'
-                meta:
-                  $ref: '#/components/schemas/ApiMeta'
-              required:
-              - success
-              - data
-              - meta
-      '403':
-        $ref: '#/components/responses/Forbidden'
-      default:
-        description: API error
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorResponse'
-    x-zuku-availability: unavailable
-- operationId: getAdminContents
-  method: GET
-  path: /admin/contents
-  reason: No matching implemented server route.
-  operation:
-    operationId: getAdminContents
-    tags:
-    - Admin
-    summary: 콘텐츠 관리 목록
-    description: 전체 콘텐츠를 관리자 권한으로 조회합니다. Legacy documented operation without a matching implemented server route;
-      the SDK rejects it explicitly instead of issuing a misleading request.
-    parameters:
-    - name: status
-      in: query
-      schema:
-        type: string
-        enum:
-        - draft
-        - published
-        - archived
-        - moderated
-        - deleted
-      description: 상태 필터
-    - name: category
-      in: query
-      schema:
-        $ref: '#/components/schemas/ContentCategory'
-    - name: search
-      in: query
-      schema:
-        type: string
-      description: 제목 검색
-    - $ref: '#/components/parameters/LimitParam'
-    - $ref: '#/components/parameters/OffsetParam'
-    responses:
-      '200':
-        description: 콘텐츠 목록 조회 성공
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                success:
-                  const: true
-                data:
-                  type: object
-                  properties:
-                    data:
-                      type: array
-                      items:
-                        $ref: '#/components/schemas/Content'
-                    pagination:
-                      $ref: '#/components/schemas/PaginationMeta'
-                meta:
-                  $ref: '#/components/schemas/ApiMeta'
-              required:
-              - success
-              - data
-              - meta
-      '403':
-        $ref: '#/components/responses/Forbidden'
-      default:
-        description: API error
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorResponse'
-    x-zuku-availability: unavailable
-- operationId: moderateContent
-  method: POST
-  path: /admin/contents/{id}/moderate
-  reason: No matching implemented server route.
-  operation:
-    operationId: moderateContent
-    tags:
-    - Admin
-    summary: 콘텐츠 검열
-    description: 콘텐츠를 검열(승인, 거부, 삭제, 경고)합니다. Legacy documented operation without a matching implemented server route;
-      the SDK rejects it explicitly instead of issuing a misleading request.
-    parameters:
-    - name: id
-      in: path
-      required: true
-      schema:
-        type: string
-    requestBody:
-      required: true
-      content:
-        application/json:
+            type: string
+      responses:
+        '200':
+          description: Hype 콘텐츠 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    const: true
+                  data:
+                    $ref: '#/components/schemas/HypeContent'
+                  meta:
+                    $ref: '#/components/schemas/ApiMeta'
+                required:
+                  - success
+                  - data
+                  - meta
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-zuku-availability: unavailable
+    aliasOf: getContent
+  - operationId: interactHypeContent
+    method: POST
+    path: /hype/{id}/interact
+    reason: No matching implemented server route.
+    operation:
+      operationId: interactHypeContent
+      tags:
+        - Hype
+      summary: Hype 콘텐츠 인터랙션
+      description: Hype 콘텐츠에 인터랙션(좋아요, 슈퍼좋아요, 공유)을 수행합니다. Legacy
+        documented operation without a matching implemented server
+        route; the SDK rejects it explicitly instead of issuing
+        a misleading request.
+      parameters:
+        - name: id
+          in: path
+          required: true
           schema:
-            $ref: '#/components/schemas/ModerateContentRequest'
-    responses:
-      '200':
-        description: 검열 완료
+            type: string
+      requestBody:
+        required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                success:
-                  const: true
-                data:
-                  $ref: '#/components/schemas/Content'
-                meta:
-                  $ref: '#/components/schemas/ApiMeta'
-              required:
-              - success
-              - data
-              - meta
-      '403':
-        $ref: '#/components/responses/Forbidden'
-      '404':
-        $ref: '#/components/responses/NotFound'
-      default:
-        description: API error
+              $ref: '#/components/schemas/HypeInteractRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    const: true
+                  data:
+                    type: object
+                    properties: {}
+                    required: []
+                  meta:
+                    $ref: '#/components/schemas/ApiMeta'
+                required:
+                  - success
+                  - data
+                  - meta
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-zuku-availability: unavailable
+  - operationId: getSwipeFeedAlt
+    method: GET
+    path: /swipe/feed
+    reason: Swipe uses the canonical feed with mode=stream.
+    operation:
+      operationId: getSwipeFeedAlt
+      tags:
+        - Swipe
+      summary: Swipe 피드 조회 (대체 경로)
+      description: Swipe 숏폼 콘텐츠 피드를 반환합니다. Legacy documented operation
+        without a matching implemented server route; the SDK rejects
+        it explicitly instead of issuing a misleading request.
+      parameters:
+        - name: cursor
+          in: query
+          schema:
+            type: string
+          description: 무한 스크롤용 커서
+        - $ref: '#/components/parameters/LimitParam'
+      responses:
+        '200':
+          description: Swipe 피드 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    const: true
+                  data:
+                    type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SwipeContent'
+                      next_cursor:
+                        type:
+                          - string
+                          - 'null'
+                        example: eyJpZCI6ImNudF8wMUg4WDlZMlozQTRCNUM2RCIifQ==
+                  meta:
+                    $ref: '#/components/schemas/ApiMeta'
+                required:
+                  - success
+                  - data
+                  - meta
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-zuku-availability: unavailable
+    aliasOf: getSwipeFeed
+    queryDefaults:
+      mode: stream
+  - operationId: recordSwipeWatch
+    method: POST
+    path: /swipe/{id}/watch
+    reason: No matching implemented server route.
+    operation:
+      operationId: recordSwipeWatch
+      tags:
+        - Swipe
+      summary: Swipe 시청 기록
+      description: Swipe 콘텐츠 시청 기록을 저장합니다. Legacy documented operation
+        without a matching implemented server route; the SDK rejects
+        it explicitly instead of issuing a misleading request.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ErrorResponse'
-    x-zuku-availability: unavailable
+              $ref: '#/components/schemas/SwipeWatchRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    const: true
+                  data:
+                    type: object
+                    properties: {}
+                    required: []
+                  meta:
+                    $ref: '#/components/schemas/ApiMeta'
+                required:
+                  - success
+                  - data
+                  - meta
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-zuku-availability: unavailable
+  - operationId: createGameReview
+    method: POST
+    path: /jump/games/{id}/review
+    reason: No matching implemented server route.
+    operation:
+      operationId: createGameReview
+      tags:
+        - Jump
+      summary: 게임 리뷰 작성
+      description: 게임에 대한 리뷰를 작성합니다. Legacy documented operation
+        without a matching implemented server route; the SDK rejects
+        it explicitly instead of issuing a misleading request.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReviewRequest'
+      responses:
+        '201':
+          description: 리뷰 작성 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    const: true
+                  data:
+                    $ref: '#/components/schemas/GameReview'
+                  meta:
+                    $ref: '#/components/schemas/ApiMeta'
+                required:
+                  - success
+                  - data
+                  - meta
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-zuku-availability: unavailable
+  - operationId: getGameLeaderboard
+    method: GET
+    path: /jump/games/{id}/leaderboard
+    reason: No matching implemented server route.
+    operation:
+      operationId: getGameLeaderboard
+      tags:
+        - Jump
+      summary: 게임 리더보드
+      description: 게임의 리더보드를 반환합니다. Legacy documented operation
+        without a matching implemented server route; the SDK rejects
+        it explicitly instead of issuing a misleading request.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/LimitParam'
+        - name: period
+          in: query
+          schema:
+            type: string
+            enum:
+              - daily
+              - weekly
+              - all_time
+            default: all_time
+          description: 기간 필터
+      responses:
+        '200':
+          description: 리더보드 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    const: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/LeaderboardEntry'
+                  meta:
+                    $ref: '#/components/schemas/ApiMeta'
+                required:
+                  - success
+                  - data
+                  - meta
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-zuku-availability: unavailable
+  - operationId: unfollowCreator
+    method: DELETE
+    path: /creators/{id}/follow
+    reason: No matching implemented server route.
+    operation:
+      operationId: unfollowCreator
+      tags:
+        - Creators
+      summary: 크리에이터 언팔로우
+      description: 크리에이터를 언팔로우합니다. Legacy documented operation
+        without a matching implemented server route; the SDK rejects
+        it explicitly instead of issuing a misleading request.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    const: true
+                  data:
+                    type: object
+                    properties: {}
+                    required: []
+                  meta:
+                    $ref: '#/components/schemas/ApiMeta'
+                required:
+                  - success
+                  - data
+                  - meta
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-zuku-availability: unavailable
+  - operationId: getCreatorAnalytics
+    method: GET
+    path: /creators/{id}/analytics
+    reason: No matching implemented server route.
+    operation:
+      operationId: getCreatorAnalytics
+      tags:
+        - Creators
+      summary: 크리에이터 분석 데이터
+      description: 크리에이터의 분석 데이터를 반환합니다. 본인의 데이터만 조회 가능합니다. Legacy
+        documented operation without a matching implemented server
+        route; the SDK rejects it explicitly instead of issuing
+        a misleading request.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: period
+          in: query
+          schema:
+            type: string
+            enum:
+              - 7d
+              - 30d
+              - 90d
+            default: 30d
+          description: 분석 기간
+      responses:
+        '200':
+          description: 분석 데이터 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    const: true
+                  data:
+                    $ref: '#/components/schemas/CreatorAnalytics'
+                  meta:
+                    $ref: '#/components/schemas/ApiMeta'
+                required:
+                  - success
+                  - data
+                  - meta
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-zuku-availability: unavailable
+  - operationId: getReport
+    method: GET
+    path: /reports/{id}
+    reason: No matching implemented server route.
+    operation:
+      operationId: getReport
+      tags:
+        - Moderation
+      summary: 신고 상세 조회
+      description: 신고의 상세 정보를 반환합니다. 관리자만 조회 가능합니다. Legacy documented
+        operation without a matching implemented server route;
+        the SDK rejects it explicitly instead of issuing a misleading
+        request.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 신고 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    const: true
+                  data:
+                    $ref: '#/components/schemas/Report'
+                  meta:
+                    $ref: '#/components/schemas/ApiMeta'
+                required:
+                  - success
+                  - data
+                  - meta
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-zuku-availability: unavailable
+  - operationId: getAdminDashboard
+    method: GET
+    path: /admin/dashboard
+    reason: No matching implemented server route.
+    operation:
+      operationId: getAdminDashboard
+      tags:
+        - Admin
+      summary: 관리자 대시보드
+      description: 관리자 대시보드 통계를 반환합니다. 관리자 권한이 필요합니다. Legacy documented
+        operation without a matching implemented server route;
+        the SDK rejects it explicitly instead of issuing a misleading
+        request.
+      responses:
+        '200':
+          description: 대시보드 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    const: true
+                  data:
+                    $ref: '#/components/schemas/AdminDashboard'
+                  meta:
+                    $ref: '#/components/schemas/ApiMeta'
+                required:
+                  - success
+                  - data
+                  - meta
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-zuku-availability: unavailable
+  - operationId: getAdminContents
+    method: GET
+    path: /admin/contents
+    reason: No matching implemented server route.
+    operation:
+      operationId: getAdminContents
+      tags:
+        - Admin
+      summary: 콘텐츠 관리 목록
+      description: 전체 콘텐츠를 관리자 권한으로 조회합니다. Legacy documented operation
+        without a matching implemented server route; the SDK rejects
+        it explicitly instead of issuing a misleading request.
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - draft
+              - published
+              - archived
+              - moderated
+              - deleted
+          description: 상태 필터
+        - name: category
+          in: query
+          schema:
+            $ref: '#/components/schemas/ContentCategory'
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: 제목 검색
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/OffsetParam'
+      responses:
+        '200':
+          description: 콘텐츠 목록 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    const: true
+                  data:
+                    type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Content'
+                      pagination:
+                        $ref: '#/components/schemas/PaginationMeta'
+                  meta:
+                    $ref: '#/components/schemas/ApiMeta'
+                required:
+                  - success
+                  - data
+                  - meta
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-zuku-availability: unavailable
+  - operationId: moderateContent
+    method: POST
+    path: /admin/contents/{id}/moderate
+    reason: No matching implemented server route.
+    operation:
+      operationId: moderateContent
+      tags:
+        - Admin
+      summary: 콘텐츠 검열
+      description: 콘텐츠를 검열(승인, 거부, 삭제, 경고)합니다. Legacy documented
+        operation without a matching implemented server route;
+        the SDK rejects it explicitly instead of issuing a misleading
+        request.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModerateContentRequest'
+      responses:
+        '200':
+          description: 검열 완료
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    const: true
+                  data:
+                    $ref: '#/components/schemas/Content'
+                  meta:
+                    $ref: '#/components/schemas/ApiMeta'
+                required:
+                  - success
+                  - data
+                  - meta
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-zuku-availability: unavailable

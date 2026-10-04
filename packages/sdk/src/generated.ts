@@ -1,5 +1,5 @@
 // Generated from spec/zuku-api-v1.yaml. Run npm run generate; do not edit.
-export const contractSha256 = "8b105b84765d8e6a2798b7016168bb0fca2dc0ab89a4c3328e51b4e033cda6c2";
+export const contractSha256 = "87357d79a4d321b6c7dac0f99e245bd8b704fb2f28041695c32fb883f516524e";
 export type JsonValue = null | boolean | number | string | JsonValue[] | { [key: string]: JsonValue };
 export type PaginationMeta = { "total": number; "limit": number; "offset": number; "has_more": boolean; [key: string]: unknown };
 export type ErrorResponse = { "success": false; "error": { "code": string; "message": string; "details"?: Array<{ "field": string; "message": string; [key: string]: unknown }>; [key: string]: unknown }; "meta"?: ApiMeta; [key: string]: unknown };
